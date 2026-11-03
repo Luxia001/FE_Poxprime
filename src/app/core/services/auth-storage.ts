@@ -30,6 +30,14 @@ export class AuthStorageService {
     return this.get(AUTH_STORAGE_KEYS.sessionUid);
   }
 
+  get refreshToken(): string {
+    return this.get(AUTH_STORAGE_KEYS.refreshToken);
+  }
+
+  isAuthenticated(): boolean {
+    return Boolean(this.accessToken && this.refreshToken && this.sessionUid);
+  }
+
   clear(): void {
     try {
       const storage = this.window?.localStorage;

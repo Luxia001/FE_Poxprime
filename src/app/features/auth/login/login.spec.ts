@@ -47,7 +47,7 @@ describe('Login', () => {
     component.validateForm.setValue({ Email: 'john@example.com', password: 'Password123', remember: true });
     component.submitForm();
 
-    const request = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/login');
+    const request = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login');
     expect(request.request.body).toEqual({ usernameOrEmail: 'john@example.com', password: 'Password123' });
     request.flush({
       result: true,
@@ -71,7 +71,7 @@ describe('Login', () => {
   it('should show the API error without storing credentials', () => {
     component.validateForm.setValue({ Email: 'john@example.com', password: 'wrong-password', remember: true });
     component.submitForm();
-    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/login').flush(
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login').flush(
       { result: false, message: 'Invalid credentials', code: 401 },
       { status: 401, statusText: 'Unauthorized' },
     );

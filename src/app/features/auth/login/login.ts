@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { LanguageService } from '../../../core/services/language';
@@ -16,6 +16,7 @@ import { LoginErrorResponse } from '../models/login.model';
 })
 export class Login {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly loginApi = inject(LoginApiService);
   private readonly authStorage = inject(AuthStorageService);
   readonly locale = inject(LanguageService);
@@ -43,7 +44,8 @@ export class Login {
       next: (response) => {
         this.authStorage.save(response.data);
         this.loading.set(false);
-        void this.router.navigate(['/main/user']);
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        void this.router.navigateByUrl(returnUrl?.startsWith('/main') ? returnUrl : '/main/user');
       },
       error: (error: LoginErrorResponse) => {
         this.loading.set(false);
