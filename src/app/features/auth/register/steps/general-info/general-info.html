@@ -1,0 +1,66 @@
+<div [formGroup]="form()" class="grid gap-5">
+  @for (field of names; track field.key) {
+    <div class="flex flex-col gap-2">
+      <label [for]="field.key" class="text-sm font-medium text-gray-700">{{ text()[field.key] }}</label>
+      <input
+        [id]="field.key"
+        [formControlName]="field.key"
+        [autocomplete]="field.autocomplete"
+        placeholder="Please input"
+        class="h-11 rounded-lg border border-gray-300 px-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+        [attr.aria-invalid]="
+          form().controls[field.key].touched && form().controls[field.key].invalid
+        "
+        [attr.aria-describedby]="
+          form().controls[field.key].touched && form().controls[field.key].invalid
+            ? field.key + '-error'
+            : null
+        "
+      />
+      @if (form().controls[field.key].touched && form().controls[field.key].invalid) {
+        <p [id]="field.key + '-error'" class="m-0 text-xs text-red-600">
+          Enter a name using English letters.
+        </p>
+      }
+    </div>
+  }
+  <div class="flex flex-col gap-2">
+    <label for="gender" class="text-sm font-medium text-gray-700">{{ text().gender }}</label>
+    <select
+      id="gender"
+      formControlName="gender"
+      [attr.aria-invalid]="form().controls.gender.touched && form().controls.gender.invalid"
+      [attr.aria-describedby]="
+        form().controls.gender.touched && form().controls.gender.invalid ? 'gender-error' : null
+      "
+      class="h-11 rounded-lg border border-gray-300 bg-white px-3 focus:outline-blue-600"
+    >
+      <option value="" disabled>Select gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+      <option value="unspecified">Prefer not to say</option>
+    </select>
+    @if (form().controls.gender.touched && form().controls.gender.invalid) {
+      <p id="gender-error" class="m-0 text-xs text-red-600">Select your gender.</p>
+    }
+  </div>
+  <div class="flex flex-col gap-2">
+    <label for="country" class="text-sm font-medium text-gray-700">{{ text().country }}</label>
+    <input
+      id="country"
+      formControlName="country"
+      autocomplete="country-name"
+      [attr.aria-invalid]="form().controls.country.touched && form().controls.country.invalid"
+      [attr.aria-describedby]="
+        form().controls.country.touched && form().controls.country.invalid ? 'country-error' : null
+      "
+      placeholder="Country of residence"
+      class="h-11 rounded-lg border border-gray-300 px-3 focus:outline-blue-600"
+    />
+    @if (form().controls.country.touched && form().controls.country.invalid) {
+      <p id="country-error" class="m-0 text-xs text-red-600">Enter your country.</p>
+    }
+  </div>
+</div>
+

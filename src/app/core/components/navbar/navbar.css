@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+li {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+li:hover {
+  background-color: #84caff;
+}
+@media (max-width: 540px) {
+  .navbar {
+    margin: 12px 12px 0;
+    border-radius: 22px;
+  }
+  nav {
+    padding: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand img {
+    height: 30px;
+    max-width: 100px;
+  }
+  .nav-actions {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .nav-link,
+  .language-button {
+    padding: 7px 9px;
+    font-size: 13px;
+  }
+}

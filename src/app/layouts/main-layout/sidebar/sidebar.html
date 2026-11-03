@@ -1,0 +1,109 @@
+<aside
+  class="flex h-screen flex-col gap-4 transition-all duration-300 rounded-2xl"
+  [class.w-64]="!isCollapsed()"
+  [class.w-20]="isCollapsed()"
+>
+  <!-- Header -->
+  <div
+    class="flex h-16 shrink-0 items-center border-b border-white/10 px-4 bg-blue-500 text-white rounded-2xl shadow-sm"
+    [class.justify-between]="!isCollapsed()"
+    [class.justify-center]="isCollapsed()"
+  >
+    @if (!isCollapsed()) {
+      <img src="/images/POX_Logo.png" alt="POX Prime" class="h-8 w-auto object-contain" />
+    }
+    <button
+      type="button"
+      (click)="toggleCollapsed()"
+      class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-300 transition hover:bg-white/10 hover:text-white"
+      aria-label="Toggle sidebar"
+    >
+      <nz-icon [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'" />
+    </button>
+  </div>
+
+  <!-- Profile + Balance -->
+  <div class="shrink-0">
+    @if (!isCollapsed()) {
+      <div class="rounded-2xl bg-white p-4 text-slate-800 shadow-sm">
+        <div class="flex items-center gap-3">
+          <nz-avatar
+            [nzSize]="48"
+            nzIcon="user"
+            nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+          />
+          <div class="min-w-0">
+            <p class="truncate text-sm font-semibold">test 1234</p>
+            <p class="truncate text-xs text-slate-500">test@mail.com</p>
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+          <span class="text-xs text-slate-500">Available Balance</span>
+          <span class="text-lg font-bold text-blue-600">$ 3,000</span>
+        </div>
+      </div>
+    } @else {
+      <div class="flex justify-center">
+        <nz-avatar
+          [nzSize]="40"
+          nzIcon="user"
+          nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+        />
+      </div>
+    }
+  </div>
+
+  <!-- Menu (ยืดเต็มพื้นที่ที่เหลือ) -->
+  <nav class="flex-1 bg-white rounded-2xl shadow-sm">
+    <app-text-head title="Account" class="block" [class.hidden]="isCollapsed()" />
+    <ul
+      nz-menu
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed()"
+      class="bg-transparent! border-0"
+    >
+      <li
+        nz-menu-item
+        nz-tooltip
+        nzTooltipPlacement="right"
+        [nzTooltipTitle]="isCollapsed() ? 'User' : ''"
+        class=""
+        [routerLink]="['/main/user']"
+        routerLinkActive="active-link"
+      >
+        <nz-icon nzType="user" />
+        <span>User</span>
+      </li>
+      <li
+        nz-menu-item
+        nz-tooltip
+        nzTooltipPlacement="right"
+        [nzTooltipTitle]="isCollapsed() ? 'Account Security' : ''"
+        class=""
+        [routerLink]="['/main/security']"
+      >
+        <nz-icon nzType="safety-certificate" nzTheme="outline" />
+        <span>Account Security</span>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Footer: Sign out -->
+  <div class="shrink-0 border-t border-white/10 p-3 text-white font-bold bg-red-500 rounded-xl">
+    <button
+      type="button"
+      (click)="signOut()"
+      class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-mediumtransition hover:text-red-300"
+      [class.justify-center]="isCollapsed()"
+      nz-tooltip
+      nzTooltipPlacement="right"
+      [nzTooltipTitle]="isCollapsed() ? 'Sign out' : ''"
+    >
+      <nz-icon nzType="logout" />
+      @if (!isCollapsed()) {
+        <span>Sign out</span>
+      }
+    </button>
+  </div>
+</aside>

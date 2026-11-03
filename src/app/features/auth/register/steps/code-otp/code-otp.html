@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-2">
+  <p id="otp-help" class="m-0 text-sm leading-6 text-gray-500">
+    Please check the OTP sent to your SMS.
+  </p>
+  <div role="group" aria-labelledby="otp-label" aria-describedby="otp-help">
+    <nz-input-otp
+      id="otp"
+      [formControl]="control()"
+      [nzLength]="6"
+      nzSize="large"
+      [nzFormatter]="formatter"
+      [nzStatus]="control().touched && control().invalid ? 'error' : ''"
+      [attr.aria-invalid]="control().touched && control().invalid"
+      [attr.aria-describedby]="control().touched && control().invalid ? 'otp-error' : 'otp-help'"
+      class="grid! w-full grid-cols-6! gap-2! [&_input]:block! [&_input]:h-12! [&_input]:w-full! [&_input]:min-w-0! [&_input]:rounded-lg! [&_input]:border! [&_input]:border-solid! [&_input]:border-gray-300! [&_input]:bg-white! [&_input]:px-0! [&_input]:text-center! [&_input]:text-xl! [&_input]:text-gray-900! [&_input:focus]:border-blue-600! [&_input:focus]:ring-2 [&_input:focus]:ring-blue-100 [&_.ant-input-status-error]:border-red-500!"
+    />
+  </div>
+  @if (control().touched && control().invalid) {
+    <p id="otp-error" role="alert" class="m-0 text-xs text-red-600">{{ text().otpError }}</p>
+  }
+</div>
+

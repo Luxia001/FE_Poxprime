@@ -1,0 +1,33 @@
+<header class="relative bg-[#001F3F] shadow-md rounded-2xl">
+  <nav class="flex justify-between items-center">
+    <a class="brand" routerLink="/" aria-label="POX Prime" class="">
+      <img src="/images/POX_Logo.png" alt="POX Prime" />
+    </a>
+    <div class="nav-actions mx-5">
+      <button
+        class="bg-white/10 text-white! rounded-full p-1 px-3"
+        type="button"
+        nz-dropdown
+        [nzDropdownMenu]="languages"
+        nzTrigger="click"
+        nzPlacement="bottomRight"
+        [attr.aria-label]="locale.text().language"
+      >
+        <span>{{ locale.language() === 'th' ? 'ไทย' : 'English' }}</span>
+      </button>
+    </div>
+  </nav>
+</header>
+<nz-dropdown-menu #languages="nzDropdownMenu">
+  <ul
+    nz-menu
+    class="bg-white w-full cursor-pointer rounded-lg border border-gray-200 p-1 text-sm text-gray-700 shadow-sm"
+  >
+    <li nz-menu-item [nzSelected]="locale.language() === 'th'" (click)="locale.setLanguage('th')">
+      <span lang="th">ไทย</span>
+    </li>
+    <li nz-menu-item [nzSelected]="locale.language() === 'en'" (click)="locale.setLanguage('en')">
+      <span lang="en">English</span>
+    </li>
+  </ul>
+</nz-dropdown-menu>

@@ -1,0 +1,136 @@
+<div class="grid grid-cols-1 bg-white rounded-2xl md:grid-cols-2">
+  <div class="hidden min-h-140 items-center justify-center p-10 md:flex">
+    <img
+      src="images/banners/login-banner.png"
+      alt="POX Prime"
+      class="h-auto w-full max-w-64 object-contain"
+    />
+  </div>
+
+  <div class="m-3 sm:m-5">
+    <div class="flex flex-col gap-5 rounded-2xl p-5 shadow-sm sm:p-8">
+      <div class="flex flex-col gap-3">
+        <p class="m-0 text-sm font-semibold tracking-widest text-[#001F3F]">POXPRIME</p>
+        <h1 id="login-title" class="m-0 text-2xl font-bold text-gray-900">{{ text().welcome }}</h1>
+        <p class="m-0 text-sm text-gray-500">
+          {{ text().noAccount }}
+          <a
+            routerLink="/signup"
+            class="font-medium text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-blue-600"
+            >{{ text().signup }}</a
+          >
+        </p>
+      </div>
+
+      <div class="grid gap-3">
+        <button
+          type="button"
+          class="flex h-11 items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 text-sm"
+        >
+          <img src="images/icons/Google.png" alt="Google" />
+          {{ text().google }}
+        </button>
+        <button
+          type="button"
+          class="flex h-11 items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 text-sm"
+        >
+          <img src="images/icons/Facebook.png" alt="Facebook" />
+          {{ text().facebook }}
+        </button>
+      </div>
+
+      <div class="flex items-center gap-5" aria-hidden="true">
+        <span class="h-px grow bg-gray-200"></span
+        ><span class="text-sm text-gray-400">{{ text().or }}</span
+        ><span class="h-px grow bg-gray-200"></span>
+      </div>
+
+      <form
+        [formGroup]="validateForm"
+        (ngSubmit)="submitForm()"
+        novalidate
+        class="flex flex-col gap-5"
+      >
+        <div class="flex flex-col gap-2">
+          <label for="Email" class="text-sm font-medium text-gray-700">{{ text().Email }}</label>
+          <input
+            nz-input
+            id="Email"
+            formControlName="Email"
+            autocomplete="Email"
+            [placeholder]="text().EmailHint"
+            [attr.aria-invalid]="submitted() && validateForm.controls.Email.invalid"
+            [attr.aria-describedby]="
+              submitted() && validateForm.controls.Email.invalid ? 'Email-error' : null
+            "
+            class="h-11 w-full rounded-lg! border-gray-300! px-3! text-sm! focus:border-blue-600! focus:ring-2 focus:ring-blue-100 aria-invalid:border-red-500!"
+          />
+          @if (submitted() && validateForm.controls.Email.invalid) {
+            <p class="field-error m-0 text-xs text-red-600" id="Email-error">
+              {{ text().requiredUser }}
+            </p>
+          }
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="password" class="text-sm font-medium text-gray-700">{{
+            text().password
+          }}</label>
+          <div class="relative">
+            <input
+              nz-input
+              id="password"
+              formControlName="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="current-password"
+              [placeholder]="text().passwordHint"
+              [attr.aria-invalid]="submitted() && validateForm.controls.password.invalid"
+              [attr.aria-describedby]="
+                submitted() && validateForm.controls.password.invalid ? 'password-error' : null
+              "
+              class="h-11 w-full rounded-lg! border-gray-300! pr-18! pl-3! text-sm! focus:border-blue-600! focus:ring-2 focus:ring-blue-100 aria-invalid:border-red-500!"
+            />
+            <button
+              class="toggle-password absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-1 text-xs text-gray-500 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600"
+              type="button"
+              (click)="showPassword.set(!showPassword())"
+              [attr.aria-pressed]="showPassword()"
+              aria-controls="password"
+            >
+              {{ showPassword() ? text().hide : text().show }}
+            </button>
+          </div>
+          @if (submitted() && validateForm.controls.password.invalid) {
+            <p class="field-error m-0 text-xs text-red-600" id="password-error">
+              {{ text().requiredPassword }}
+            </p>
+          }
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+          <label class="flex cursor-pointer items-center gap-2 text-gray-600"
+            ><input
+              type="checkbox"
+              formControlName="remember"
+              class="size-4 accent-blue-700"
+            /><span>{{ text().remember }}</span></label
+          >
+          <button type="button" class="border-0 bg-transparent p-0 text-blue-600">
+            {{ text().forgot }}
+          </button>
+        </div>
+        @if (unavailable()) {
+          <p class="m-0 rounded-lg bg-amber-50 p-3 text-sm text-amber-800" role="status">
+            {{ text().pending }}
+          </p>
+        }
+        <button
+          nz-button
+          nzType="primary"
+          type="submit"
+          class="h-11! w-full rounded-lg! border-blue-700! bg-blue-700! text-sm! font-medium hover:border-blue-800! hover:bg-blue-800! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 text-white"
+        >
+          {{ text().submit }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
