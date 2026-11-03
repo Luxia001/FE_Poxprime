@@ -12,13 +12,13 @@ import { ContactPassword } from './steps/contact-password/contact-password';
 
 import { TermCondition } from './steps/term-condition/term-condition';
 import { GeneralInfo } from './steps/general-info/general-info';
-import { RegisterRequest } from './models/register-request';
-import { RegisterApiService } from './services/register-api';
-import { RegisterErrorResponse } from './models/register-response';
+import { RegisterApiService } from '../services/register-api';
 import {
   StatusModal,
   StatusModalType,
 } from '../../../shared/components/modals/status-modal/status-modal';
+import { RegisterErrorResponse } from '../models/register-response';
+import { RegisterRequest } from '../models/register-request';
 
 @Component({
   imports: [

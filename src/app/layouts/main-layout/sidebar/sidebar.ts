@@ -6,6 +6,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { TextHead } from '../../../shared/components/headers/text-head/text-head';
+import { AuthStorageService } from '../../../core/services/auth-storage';
 
 @Component({
   imports: [
@@ -24,12 +25,14 @@ import { TextHead } from '../../../shared/components/headers/text-head/text-head
 export class Sidebar {
   readonly isCollapsed = model(false);
   private readonly route = inject(Router);
+  private readonly authStorage = inject(AuthStorageService);
 
   toggleCollapsed(): void {
     this.isCollapsed.update((isCollapsed) => !isCollapsed);
   }
 
-  signOut() {
-    this.route.navigate(['login']);
+  signOut(): void {
+    this.authStorage.clear();
+    void this.route.navigate(['/login']);
   }
 }

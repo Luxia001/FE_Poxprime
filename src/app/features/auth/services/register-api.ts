@@ -7,7 +7,7 @@ import {
   RegisterResponse,
   RegisterSuccessResponse,
 } from '../models/register-response';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterApiService {

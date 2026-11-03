@@ -117,18 +117,19 @@
             {{ text().forgot }}
           </button>
         </div>
-        @if (unavailable()) {
-          <p class="m-0 rounded-lg bg-amber-50 p-3 text-sm text-amber-800" role="status">
-            {{ text().pending }}
+        @if (errorMessage()) {
+          <p class="m-0 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            {{ errorMessage() }}
           </p>
         }
         <button
           nz-button
           nzType="primary"
           type="submit"
+          [disabled]="loading()"
           class="h-11! w-full rounded-lg! border-blue-700! bg-blue-700! text-sm! font-medium hover:border-blue-800! hover:bg-blue-800! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 text-white"
         >
-          {{ text().submit }}
+          {{ loading() ? 'Signing in...' : text().submit }}
         </button>
       </form>
     </div>

@@ -1,0 +1,48 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import {
+  LoginErrorResponse,
+  LoginRequest,
+  LoginResponse,
+  LoginSuccessResponse,
+} from '../models/login.model';
+
+@Injectable({ providedIn: 'root' })
+export class LoginApiService {
+  private readonly http = inject(HttpClient);
+  private readonly endpoint = `${environment.apiUrl}/v1/auth/login`;
+
+  login(request: LoginRequest): Observable<LoginSuccessResponse> {
+    return this.http.post<LoginResponse>(this.endpoint, request).pipe(
+      map((response) => {
+        if (!response.result) throw response;
+        return response;
+      }),
+      catchError((response: HttpErrorResponse | LoginErrorResponse) =>
+        throwError(() => this.normalizeError(response)),
+      ),
+    );
+  }
+
+  private normalizeError(response: HttpErrorResponse | LoginErrorResponse): LoginErrorResponse {
+    if (!(response instanceof HttpErrorResponse)) return response;
+    const body = response.error;
+    if (body && typeof body === 'object' && body.result === false) {
+      return {
+        result: false,
+        message: typeof body.message === 'string' ? body.message : 'Login failed',
+        error: typeof body.error === 'string' ? body.error : body.error?.message,
+        errors: Array.isArray(body.errors) ? body.errors : undefined,
+        code: typeof body.code === 'number' ? body.code : response.status,
+      };
+    }
+    return {
+      result: false,
+      message: response.status === 0 ? 'Unable to connect to the login service' : 'Login failed',
+      error: response.message,
+      code: response.status,
+    };
+  }
+}

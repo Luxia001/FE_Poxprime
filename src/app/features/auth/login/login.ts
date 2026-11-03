@@ -4,6 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { LanguageService } from '../../../core/services/language';
+import { LoginApiService } from '../services/login-api';
+import { AuthStorageService } from '../../../core/services/auth-storage';
+import { LoginErrorResponse } from '../models/login.model';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink, NzButtonModule, NzInputModule],
@@ -13,25 +16,39 @@ import { LanguageService } from '../../../core/services/language';
 })
 export class Login {
   private readonly router = inject(Router);
+  private readonly loginApi = inject(LoginApiService);
+  private readonly authStorage = inject(AuthStorageService);
   readonly locale = inject(LanguageService);
   readonly text = this.locale.loginText;
   readonly showPassword = signal(false);
   readonly submitted = signal(false);
-  readonly unavailable = signal(false);
+  readonly loading = signal(false);
+  readonly errorMessage = signal('');
   private readonly fb = inject(NonNullableFormBuilder);
   readonly validateForm = this.fb.group({
-    Email: ['', Validators.required, Validators.email],
+    Email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
     remember: [true],
   });
 
   submitForm(): void {
     this.submitted.set(true);
-    this.unavailable.set(false);
+    this.errorMessage.set('');
     this.validateForm.markAllAsTouched();
-    if (this.validateForm.valid) {
-         this.unavailable.set(true);
-    }
-    this.router.navigate(['/main/user']);
+    if (this.validateForm.invalid || this.loading()) return;
+
+    const form = this.validateForm.getRawValue();
+    this.loading.set(true);
+    this.loginApi.login({ usernameOrEmail: form.Email.trim(), password: form.password }).subscribe({
+      next: (response) => {
+        this.authStorage.save(response.data);
+        this.loading.set(false);
+        void this.router.navigate(['/main/user']);
+      },
+      error: (error: LoginErrorResponse) => {
+        this.loading.set(false);
+        this.errorMessage.set(error.error || error.message || this.text().pending);
+      },
+    });
   }
 }
