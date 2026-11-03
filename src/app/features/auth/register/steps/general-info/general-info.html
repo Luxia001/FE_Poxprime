@@ -1,7 +1,9 @@
 <div [formGroup]="form()" class="grid gap-5">
   @for (field of names; track field.key) {
     <div class="flex flex-col gap-2">
-      <label [for]="field.key" class="text-sm font-medium text-gray-700">{{ text()[field.key] }}</label>
+      <label [for]="field.key" class="text-sm font-medium text-gray-700">{{
+        text()[field.key]
+      }}</label>
       <input
         [id]="field.key"
         [formControlName]="field.key"
@@ -39,7 +41,6 @@
       <option value="male">Male</option>
       <option value="female">Female</option>
       <option value="other">Other</option>
-      <option value="unspecified">Prefer not to say</option>
     </select>
     @if (form().controls.gender.touched && form().controls.gender.invalid) {
       <p id="gender-error" class="m-0 text-xs text-red-600">Select your gender.</p>
@@ -63,4 +64,3 @@
     }
   </div>
 </div>
-

@@ -30,11 +30,18 @@
           <nz-avatar
             [nzSize]="48"
             nzIcon="user"
-            nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            [nzSrc]="profileApi.profile()?.imageUrl || ''"
           />
           <div class="min-w-0">
-            <p class="truncate text-sm font-semibold">test 1234</p>
-            <p class="truncate text-xs text-slate-500">test@mail.com</p>
+            @if (profileApi.loading()) {
+              <p class="text-sm text-slate-400">Loading profile...</p>
+            } @else if (profileApi.profile(); as profile) {
+              <p class="truncate text-sm font-semibold">{{ profile.fullName }}</p>
+              <p class="truncate text-xs text-slate-500">{{ profile.email }}</p>
+            } @else {
+              <p class="truncate text-sm font-semibold">User</p>
+              <p class="truncate text-xs text-red-500">{{ profileApi.error() }}</p>
+            }
           </div>
         </div>
 
@@ -48,7 +55,7 @@
         <nz-avatar
           [nzSize]="40"
           nzIcon="user"
-          nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+          [nzSrc]="profileApi.profile()?.imageUrl || ''"
         />
       </div>
     }

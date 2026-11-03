@@ -7,6 +7,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { TextHead } from '../../../shared/components/headers/text-head/text-head';
 import { AuthStorageService } from '../../../core/services/auth-storage';
+import { ProfileApi } from '../../../features/account/services/profile-api';
 
 @Component({
   imports: [
@@ -26,6 +27,11 @@ export class Sidebar {
   readonly isCollapsed = model(false);
   private readonly route = inject(Router);
   private readonly authStorage = inject(AuthStorageService);
+  readonly profileApi = inject(ProfileApi);
+
+  constructor() {
+    this.profileApi.loadProfile();
+  }
 
   toggleCollapsed(): void {
     this.isCollapsed.update((isCollapsed) => !isCollapsed);
@@ -33,6 +39,7 @@ export class Sidebar {
 
   signOut(): void {
     this.authStorage.clear();
+    this.profileApi.clear();
     void this.route.navigate(['/login']);
   }
 }
