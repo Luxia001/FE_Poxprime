@@ -6,6 +6,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { AccountSecurity } from './features/account/account-security/account-security';
 import { authGuard } from './core/guards/auth.guard';
+import { KycVerification } from './features/kyc-verification/kyc-verification';
 
 export const routes: Routes = [
   {
@@ -31,9 +32,12 @@ export const routes: Routes = [
     path: 'main',
     component: MainLayoutComponent,
     canActivate: [authGuard],
-    canActivateChild: [],
     children: [
-      { path: 'user', component: User },
+      {
+        path: 'user',
+        component: User,
+      },
+      { path: 'kyc-verification', component: KycVerification },
       {
         path: 'security',
         component: AccountSecurity,

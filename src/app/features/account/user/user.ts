@@ -3,6 +3,7 @@ import { LanguageService } from '../../../core/services/language';
 import { Verify } from '../../../shared/components/cards/verify/verify';
 import { KycResponse } from '../models/kyc-response';
 import { ProfileApi } from '../services/profile-api';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [Verify],
@@ -12,6 +13,7 @@ import { ProfileApi } from '../services/profile-api';
 })
 export class User {
   readonly profileApi = inject(ProfileApi);
+  private readonly router = inject(Router);
   readonly locale = inject(LanguageService);
   readonly text = this.locale.userText;
   readonly activeTab = signal(0);
@@ -40,12 +42,18 @@ export class User {
       formattedBirthDate: '',
       referralCode: '',
       initials: this.profileApi.initials(),
-      formattedCreatedAt: new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(data.createdAt),
+      formattedCreatedAt: new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
+        data.createdAt,
+      ),
     };
   });
 
   constructor() {
     this.profileApi.loadProfile();
+  }
+
+  openKycVerification(): void {
+    void this.router.navigate(['/main/kyc-verification']);
   }
   readonly kycResponse = signal<KycResponse>({
     result: true,
@@ -85,4 +93,5 @@ export class User {
       details.push({ label: this.text().rejectionReason, value: record.rejectionReason });
     return { status, tone: tone as 'success' | 'warning' | 'danger', details };
   });
+
 }

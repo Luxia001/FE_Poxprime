@@ -3,6 +3,8 @@ import { User } from './user';
 import { provideNzIconsTesting } from 'ng-zorro-antd/icon/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter, Router } from '@angular/router';
+import { vi } from 'vitest';
 
 describe('User', () => {
   let component: User;
@@ -12,7 +14,7 @@ describe('User', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [User],
-      providers: [provideNzIconsTesting(), provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideNzIconsTesting(), provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(User);
@@ -43,7 +45,7 @@ describe('User', () => {
     expect(content).toContain('John Doe');
     expect(content).toContain('john_doe');
     expect(content).toContain('john@example.com');
-    expect(content).toContain('+66812345678');
+    expect(content).toContain('812345678');
   });
 
   it('should switch the visible content when a tab is clicked', async () => {
@@ -69,6 +71,16 @@ describe('User', () => {
     expect(content).toContain('National ID card');
     expect(content).toContain('3 พ.ย. 2569');
     expect(fixture.nativeElement.querySelectorAll('app-verify').length).toBe(4);
+  });
+
+  it('should navigate to KYC verification from the KYC card action', async () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    component.activeTab.set(3);
+    fixture.detectChanges();
+    const kycButton = fixture.nativeElement.querySelector('app-verify button') as HTMLButtonElement;
+    kycButton.click();
+    await fixture.whenStable();
+    expect(navigate).toHaveBeenCalledWith(['/main/kyc-verification']);
   });
 });
 

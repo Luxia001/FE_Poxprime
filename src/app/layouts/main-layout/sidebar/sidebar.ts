@@ -1,4 +1,4 @@
-import { Component, inject, model, signal } from '@angular/core';
+import { Component, inject, model, output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -25,6 +25,7 @@ import { ProfileApi } from '../../../features/account/services/profile-api';
 })
 export class Sidebar {
   readonly isCollapsed = model(false);
+  readonly navigated = output<void>();
   private readonly route = inject(Router);
   private readonly authStorage = inject(AuthStorageService);
   readonly profileApi = inject(ProfileApi);
@@ -40,6 +41,7 @@ export class Sidebar {
   signOut(): void {
     this.authStorage.clear();
     this.profileApi.clear();
+    this.navigated.emit();
     void this.route.navigate(['/login']);
   }
 }

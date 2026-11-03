@@ -7,7 +7,7 @@ export const toUserProfile = ({ member, isTrusted }: ProfileData): UserProfile =
   firstName: member.m_name,
   lastName: member.m_lastname,
   fullName: `${member.m_name} ${member.m_lastname}`.trim(),
-  phone: `${member.m_phone_code}${member.m_phone}`,
+  phone: `${member.m_phone}`,
   country: member.m_country,
   imageUrl: member.m_image_url,
   isKYC: member.isKYC === 1,

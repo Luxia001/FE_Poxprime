@@ -18,20 +18,24 @@ export class ProfileApi {
   readonly error = this.errorState.asReadonly();
   readonly initials = computed(() => {
     const profile = this.profileState();
-    return profile ? `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase() : '';
+    return profile
+      ? `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase()
+      : '';
   });
 
   loadProfile(force = false): void {
     if (this.loadingState() || (!force && this.profileState())) return;
     this.loadingState.set(true);
     this.errorState.set('');
-    this.getProfile().pipe(finalize(() => this.loadingState.set(false))).subscribe({
-      next: (profile) => this.profileState.set(profile),
-      error: (error: ProfileErrorResponse) => {
-        this.profileState.set(null);
-        this.errorState.set(error.error || error.message || 'Unable to load profile');
-      },
-    });
+    this.getProfile()
+      .pipe(finalize(() => this.loadingState.set(false)))
+      .subscribe({
+        next: (profile) => this.profileState.set(profile),
+        error: (error: ProfileErrorResponse) => {
+          this.profileState.set(null);
+          this.errorState.set(error.error || error.message || 'Unable to load profile');
+        },
+      });
   }
 
   clear(): void {
@@ -65,7 +69,10 @@ export class ProfileApi {
     }
     return {
       result: false,
-      message: response.status === 0 ? 'Unable to connect to the profile service' : 'Unable to load profile',
+      message:
+        response.status === 0
+          ? 'Unable to connect to the profile service'
+          : 'Unable to load profile',
       error: response.message,
       code: response.status,
     };

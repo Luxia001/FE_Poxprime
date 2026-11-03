@@ -10,7 +10,7 @@ import { RefreshTokenService } from '../services/refresh-token';
 const PUBLIC_PATHS = [
   '/v1/auth/login',
   '/v1/member/register',
-  '/v1/member/refresh-token',
+  '/v1/auth/refresh',
 ];
 
 export const apiInterceptor: HttpInterceptorFn = (request, next) => {
@@ -50,7 +50,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (!isApiRequest || error.status !== 401 || shouldSkip) return throwError(() => error);
+      if (!isApiRequest || !isExpiredAccessToken(error) || shouldSkip) return throwError(() => error);
 
       return refreshService.refresh().pipe(
         // refresh ไม่สำเร็จ = หมดอายุจริง ให้ออกจากระบบ
@@ -67,3 +67,16 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (request, next) => {
     }),
   );
 };
+
+function isExpiredAccessToken(error: HttpErrorResponse): boolean {
+  if (error.status === 401) return true;
+
+  const body = error.error;
+  if (!body || typeof body !== 'object') return false;
+
+  const code = body.error?.code;
+  const message = body.error?.message ?? body.message;
+  return code === 'ACCESS_TOKEN_VERIFICATION_FAILED' &&
+    typeof message === 'string' &&
+    message.toLowerCase().includes('jwt expired');
+}

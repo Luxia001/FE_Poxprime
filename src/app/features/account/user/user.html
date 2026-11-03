@@ -88,7 +88,7 @@
                   @if (profile().profileImageUrl && profile().profileImageUrl !== 'string') {
                     <img
                       [src]="profile().profileImageUrl"
-                      [alt]="profile().fullName"
+                      [alt]="profile().initials"
                       class="size-full object-cover"
                     />
                   } @else {
@@ -99,30 +99,41 @@
                   <h3 class="m-0 truncate text-xl font-bold text-slate-900">
                     {{ profile().fullName }}
                   </h3>
-                  <p class="mb-0 mt-1 text-sm text-slate-500">#UID {{ profile().id }}</p>
+                  <p class="mb-0 mt-1 text-sm text-slate-500">#UID {{ profile().username }}</p>
                 </div>
               </div>
-              <div class="bg-gray-50 border border-gray-100 rounded-xl w-full p-5">
-                @for (
-                  item of [
-                    { label: text().fullName, value: profile().fullName },
-                    { label: text().username, value: profile().username },
-                    { label: text().email, value: profile().email },
-                    { label: text().phone, value: profile().phoneNumber },
-                    { label: text().country, value: profile().country },
-                    { label: text().dateOfBirth, value: profile().formattedBirthDate },
-                    { label: text().referralCode, value: profile().referralCode },
-                    { label: text().memberSince, value: profile().formattedCreatedAt },
-                  ];
-                  track item.label
-                ) {
-                  <div class="">
+              <div class="grid grid-cols-2 bg-gray-50 border border-gray-100 rounded-xl w-full p-5">
+                <p class="text-xl font-bold">General</p>
+                <div class="">
+                  @for (
+                    item of [
+                      { label: text().fullName, value: profile().fullName },
+                      { label: text().country, value: profile().country },
+                      { label: text().dateOfBirth, value: profile().formattedBirthDate },
+                    ];
+                    track item.label
+                  ) {
                     <p class="text-xs text-slate-500">{{ item.label }}</p>
                     <p class="mb-0 mt-2 text-sm font-medium text-slate-800">
                       {{ item.value || text().notProvided }}
                     </p>
-                  </div>
-                }
+                  }
+                </div>
+                <p class="text-xl font-bold">Contact</p>
+                <div class="">
+                  @for (
+                    item of [
+                      { label: text().email, value: profile().email },
+                      { label: text().phone, value: profile().phoneNumber },
+                    ];
+                    track item.label
+                  ) {
+                    <p class="text-xs text-slate-500">{{ item.label }}</p>
+                    <p class="mb-0 mt-2 text-sm font-medium text-slate-800">
+                      {{ item.value || text().notProvided }}
+                    </p>
+                  }
+                </div>
               </div>
             </div>
           </div>
@@ -178,6 +189,7 @@
                 [statusTone]="kycCard().tone"
                 [details]="kycCard().details"
                 [actionLabel]="kycResponse().data.kyc_stat === 1 ? text().manage : text().verifyNow"
+                (action)="openKycVerification()"
               />
               <app-verify
                 [title]="text().authenticator"
