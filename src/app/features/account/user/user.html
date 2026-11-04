@@ -101,6 +101,14 @@
                   </h3>
                   <p class="mb-0 mt-1 text-sm text-slate-500">#UID {{ profile().username }}</p>
                 </div>
+
+                <button
+                  type="button"
+                  (click)="signOut()"
+                  class="flex justify-center items-center gap-3 rounded-lg p-2.5 text-sm text-white! transition bg-red-400"
+                >
+                  <nz-icon nzType="logout" />Sign out
+                </button>
               </div>
               <div class="grid grid-cols-2 bg-gray-50 border border-gray-100 rounded-xl w-full p-5">
                 <p class="text-xl font-bold">General</p>

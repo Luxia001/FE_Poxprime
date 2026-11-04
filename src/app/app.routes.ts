@@ -7,6 +7,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { AccountSecurity } from './features/account/account-security/account-security';
 import { authGuard } from './core/guards/auth.guard';
 import { KycVerification } from './features/kyc-verification/kyc-verification';
+import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
       {
         path: 'signup',
         component: Register,
+      },
+      {
+        path: 'forgotpassword',
+        component: ForgotPassword,
       },
     ],
   },

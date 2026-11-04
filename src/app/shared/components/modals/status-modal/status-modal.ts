@@ -12,5 +12,7 @@ export class StatusModal {
   readonly title = input('');
   readonly message = input('');
   readonly details = input<string[]>([]);
+  readonly actionLabel = input('');
   readonly closed = output<void>();
+  readonly confirmed = output<void>();
 }

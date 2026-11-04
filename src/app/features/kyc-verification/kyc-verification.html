@@ -1,14 +1,60 @@
 <section class="w-full">
-  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-    <a
-      routerLink="/main/user"
-      class="inline-flex items-center gap-2 text-sm font-medium text-blue-700 hover:underline"
-    >
-      ← Back to user profile
-    </a>
-    <div class="mt-6 border-b border-slate-200">
+  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+    <a routerLink="/main/user" class="text-sm font-medium text-blue-700 hover:underline">← Back to user profile</a>
+    <div class="mt-5 border-b border-slate-200 pb-5">
+      <p class="m-0 text-xs font-semibold uppercase tracking-widest text-blue-700">Identity verification</p>
       <h1 class="mb-0 mt-2 text-2xl font-bold text-slate-900">KYC Verification</h1>
+      <p class="mb-0 mt-2 text-sm text-slate-500">Complete your personal and address information before requesting an OTP.</p>
     </div>
-    <p>Things you need to prepare before verifying</p>
+
+    @if (otpRequested()) {
+      <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800" role="status">
+        OTP request initiated. The OTP verification form can be connected in the next step.
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submitForm()" novalidate class="mt-6 grid gap-6">
+      <fieldset class="grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2 sm:p-5">
+        <legend class="px-2 font-semibold text-slate-800">Personal information</legend>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">First name <span class="text-red-500">*</span>
+          <input formControlName="firstName" class="h-11 rounded-lg border border-slate-300 px-3 font-normal outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Last name <span class="text-red-500">*</span>
+          <input formControlName="lastName" class="h-11 rounded-lg border border-slate-300 px-3 font-normal outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Gender <span class="text-red-500">*</span>
+          <select formControlName="gender" class="h-11 rounded-lg border border-slate-300 bg-white px-3 font-normal"><option value="MALE">Male</option><option value="FEMALE">Female</option><option value="OTHER">Other</option></select>
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Date of birth <span class="text-red-500">*</span>
+          <input type="date" formControlName="birthDate" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Nationality <span class="text-red-500">*</span>
+          <input formControlName="nationality" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Country <span class="text-red-500">*</span>
+          <input formControlName="country" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
+        </label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700 sm:col-span-2">Passport / Identity number <span class="text-red-500">*</span>
+          <input formControlName="identity" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
+        </label>
+        <div class="grid gap-2 sm:col-span-2"><span class="text-sm font-medium text-slate-700">Phone number <span class="text-red-500">*</span></span>
+          <div class="grid grid-cols-[6rem_1fr] gap-2"><input formControlName="phoneCode" class="h-11 rounded-lg border border-slate-300 px-3" /><input formControlName="phoneNumber" inputmode="numeric" class="h-11 min-w-0 rounded-lg border border-slate-300 px-3" /></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2 sm:p-5">
+        <legend class="px-2 font-semibold text-slate-800">Address</legend>
+        <label class="grid gap-2 text-sm font-medium text-slate-700 sm:col-span-2">Address <span class="text-red-500">*</span><input formControlName="addressNo" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">District<input formControlName="district" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">City <span class="text-red-500">*</span><input formControlName="city" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">State / Province<input formControlName="state" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+        <label class="grid gap-2 text-sm font-medium text-slate-700">Postal code <span class="text-red-500">*</span><input formControlName="zipCode" inputmode="numeric" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+      </fieldset>
+
+      @if (submitted() && form.invalid) { <p class="m-0 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">Please complete all required fields with valid information.</p> }
+      <button type="submit" class="h-12 rounded-lg border-0 bg-blue-700 px-6 font-semibold text-white hover:bg-blue-800">Save and continue</button>
+    </form>
   </div>
 </section>
+
+<app-status-modal [open]="modalOpen()" [type]="modalType()" [title]="modalTitle()" [message]="modalMessage()" [details]="modalDetails()" [actionLabel]="modalType() === 'success' ? 'Send OTP' : 'Try again'" (closed)="closeModal()" (confirmed)="modalAction()" />

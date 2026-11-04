@@ -4,6 +4,12 @@ import { environment } from '../../../../environments/environment';
 import { catchError, finalize, map, Observable, throwError } from 'rxjs';
 import { ProfileErrorResponse, ProfileResponse, UserProfile } from '../models/profile-response';
 import { toUserProfile } from '../DTO/Profile.Dto';
+import {
+  ProfileUpdateRequest,
+  ProfileUpdateErrorResponse,
+  ProfileUpdateResponse,
+  ProfileUpdateSuccessResponse,
+} from '../models/profile-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileApi {
@@ -76,5 +82,28 @@ export class ProfileApi {
       error: response.message,
       code: response.status,
     };
+  }
+
+  updateProfile(request: ProfileUpdateRequest): Observable<ProfileUpdateSuccessResponse> {
+    return this.http.put<ProfileUpdateResponse>(this.endpoint, request).pipe(
+      map((res) => {
+        if (!res.result) throw res;
+        return res;
+      }),
+      catchError((response: HttpErrorResponse | ProfileUpdateErrorResponse) => {
+        if (!(response instanceof HttpErrorResponse)) return throwError(() => response);
+        const body = response.error;
+        const error: ProfileUpdateErrorResponse = body && typeof body === 'object' && body.result === false
+          ? {
+              result: false,
+              message: typeof body.message === 'string' ? body.message : 'Profile update failed',
+              error: typeof body.error === 'string' ? body.error : body.error?.message,
+              errors: Array.isArray(body.errors) ? body.errors : undefined,
+              code: typeof body.code === 'number' ? body.code : response.status,
+            }
+          : { result: false, message: 'Profile update failed', error: response.message, code: response.status };
+        return throwError(() => error);
+      }),
+    );
   }
 }

@@ -1,0 +1,15 @@
+<a
+  nz-tooltip
+  nzTooltipPlacement="right"
+  [nzTooltipTitle]="isCollapsed() ? title() : ''"
+  [routerLink]="routeLink()"
+  routerLinkActive="bg-blue-500! text-blue-600!"
+  class="flex w-full items-center gap-3 rounded-xl p-2.5 text-sm text-slate-600! transition hover:bg-slate-100!"
+  [class.justify-center]="isCollapsed()"
+  (click)="navigated.emit()"
+>
+  <nz-icon [nzType]="iconType()" />
+  @if (!isCollapsed()) {
+    <span class="truncate">{{ title() }}</span>
+  }
+</a>

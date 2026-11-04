@@ -113,9 +113,13 @@
               class="size-4 accent-blue-700"
             /><span>{{ text().remember }}</span></label
           >
-          <button type="button" class="border-0 bg-transparent p-0 text-blue-600">
+          <a
+            routerLink="/forgotpassword"
+            type="button"
+            class="border-0 bg-transparent p-0 text-blue-600"
+          >
             {{ text().forgot }}
-          </button>
+          </a>
         </div>
         @if (errorMessage()) {
           <p class="m-0 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">

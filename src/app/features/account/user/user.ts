@@ -4,9 +4,12 @@ import { Verify } from '../../../shared/components/cards/verify/verify';
 import { KycResponse } from '../models/kyc-response';
 import { ProfileApi } from '../services/profile-api';
 import { Router } from '@angular/router';
+import { AuthStorageService } from '../../../core/services/auth-storage';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
-  imports: [Verify],
+  imports: [Verify, NzIconModule, NzButtonModule],
   selector: 'app-user',
   styleUrl: './user.css',
   templateUrl: './user.html',
@@ -15,6 +18,8 @@ export class User {
   readonly profileApi = inject(ProfileApi);
   private readonly router = inject(Router);
   readonly locale = inject(LanguageService);
+  private readonly authStorage = inject(AuthStorageService);
+  private readonly route = inject(Router);
   readonly text = this.locale.userText;
   readonly activeTab = signal(0);
   readonly profile = computed(() => {
@@ -94,4 +99,9 @@ export class User {
     return { status, tone: tone as 'success' | 'warning' | 'danger', details };
   });
 
+  signOut(): void {
+    this.authStorage.clear();
+    this.profileApi.clear();
+    void this.route.navigate(['/login']);
+  }
 }

@@ -31,8 +31,8 @@
         </ul>
       }
       @if (type() !== 'loading') {
-        <button type="button" (click)="closed.emit()" class="mt-6 h-11 w-full cursor-pointer rounded-lg border-0 bg-blue-700 font-medium text-white hover:bg-blue-800">
-          {{ type() === 'success' ? 'Go to Sign in' : 'Try again' }}
+        <button type="button" (click)="confirmed.emit()" class="mt-6 h-11 w-full cursor-pointer rounded-lg border-0 bg-blue-700 font-medium text-white hover:bg-blue-800">
+          {{ actionLabel() || (type() === 'success' ? 'Continue' : 'Try again') }}
         </button>
       }
     </section>
