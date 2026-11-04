@@ -20,7 +20,7 @@ export class Login {
   private readonly loginApi = inject(LoginApiService);
   private readonly authStorage = inject(AuthStorageService);
   readonly locale = inject(LanguageService);
-  readonly text = this.locale.loginText;
+  readonly text = this.locale.text;
   readonly showPassword = signal(false);
   readonly submitted = signal(false);
   readonly loading = signal(false);
@@ -49,7 +49,7 @@ export class Login {
       },
       error: (error: LoginErrorResponse) => {
         this.loading.set(false);
-        this.errorMessage.set(error.error || error.message || this.text().pending);
+        this.errorMessage.set(error.error || error.message || this.text().signInUnavailable);
       },
     });
   }

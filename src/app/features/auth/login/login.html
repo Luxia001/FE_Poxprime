@@ -52,13 +52,13 @@
         class="flex flex-col gap-5"
       >
         <div class="flex flex-col gap-2">
-          <label for="Email" class="text-sm font-medium text-gray-700">{{ text().Email }}</label>
+          <label for="Email" class="text-sm font-medium text-gray-700">{{ text().email }}</label>
           <input
             nz-input
             id="Email"
             formControlName="Email"
             autocomplete="Email"
-            [placeholder]="text().EmailHint"
+            [placeholder]="text().emailHint"
             [attr.aria-invalid]="submitted() && validateForm.controls.Email.invalid"
             [attr.aria-describedby]="
               submitted() && validateForm.controls.Email.invalid ? 'Email-error' : null

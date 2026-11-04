@@ -14,7 +14,7 @@ export type ContactForm = FormGroup<{
   templateUrl: './contact-password.html',
 })
 export class ContactPassword {
-  readonly text = inject(LanguageService).registerText;
+  readonly text = inject(LanguageService).text;
   readonly form = input.required<ContactForm>();
   readonly fields = [
     {

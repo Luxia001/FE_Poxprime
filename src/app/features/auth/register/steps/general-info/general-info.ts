@@ -16,7 +16,7 @@ export type ProfileForm = FormGroup<{
   templateUrl: './general-info.html',
 })
 export class GeneralInfo {
-  readonly text = inject(LanguageService).registerText;
+  readonly text = inject(LanguageService).text;
   readonly form = input.required<ProfileForm>();
   readonly names = [
     { key: 'firstName', label: 'First name (Eng)', autocomplete: 'given-name' },

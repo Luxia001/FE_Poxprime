@@ -46,7 +46,7 @@ export class Register {
   readonly modalMessage = signal('');
   readonly modalDetails = signal<string[]>([]);
   readonly locale = inject(LanguageService);
-  readonly text = this.locale.registerText;
+  readonly text = this.locale.text;
   readonly titles = computed(() => [
     this.text().terms,
     this.text().generalInfo,

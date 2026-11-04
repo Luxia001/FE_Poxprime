@@ -10,7 +10,7 @@ import { NzInputOtpComponent } from 'ng-zorro-antd/input';
   templateUrl: './code-otp.html',
 })
 export class CodeOTP {
-  readonly text = inject(LanguageService).registerText;
+  readonly text = inject(LanguageService).text;
   readonly control = input.required<FormControl<string>>();
   readonly formatter = (value: string): string => value.replace(/\D/g, '');
 }

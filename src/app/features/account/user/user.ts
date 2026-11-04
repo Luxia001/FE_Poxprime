@@ -20,7 +20,7 @@ export class User {
   readonly locale = inject(LanguageService);
   private readonly authStorage = inject(AuthStorageService);
   private readonly route = inject(Router);
-  readonly text = this.locale.userText;
+  readonly text = this.locale.text;
   readonly activeTab = signal(0);
   readonly profile = computed(() => {
     const data = this.profileApi.profile();
@@ -69,7 +69,7 @@ export class User {
       kyc_type: 'id',
       kyc_id_type: 'National ID card',
       kyc_image_url: 'string',
-      kyc_stat: 1,
+      kyc_stat: 3,
       rejectionReason: 'string',
       createdAt: '2026-11-03T04:24:01.101Z',
       updatedAt: '2026-11-03T04:24:01.101Z',
@@ -80,10 +80,10 @@ export class User {
     const record = this.kycResponse().data;
     const status =
       record.kyc_stat === 1
-        ? this.text().verified
+        ? this.text().status.verified
         : record.kyc_stat === 2
-          ? this.text().rejected
-          : this.text().pending;
+          ? this.text().status.rejected
+          : this.text().status.pending;
     const tone = record.kyc_stat === 1 ? 'success' : record.kyc_stat === 2 ? 'danger' : 'warning';
     const details = [
       { label: this.text().documentType, value: record.kyc_id_type || this.text().notProvided },
