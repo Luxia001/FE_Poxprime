@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { LanguageService } from '../../../../core/services/language';
+import { LanguageService } from '../../../../../core/services/language';
 
 export interface VerifyCardDetail {
   label: string;

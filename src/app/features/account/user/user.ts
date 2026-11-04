@@ -1,53 +1,25 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { LanguageService } from '../../../core/services/language';
-import { Verify } from '../../../shared/components/cards/verify/verify';
+import { Verify } from '../../../shared/components/UI/cards/verify/verify';
 import { KycResponse } from '../models/kyc-response';
 import { ProfileApi } from '../services/profile-api';
 import { Router } from '@angular/router';
 import { AuthStorageService } from '../../../core/services/auth-storage';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { Profile } from '../../../shared/components/pages/profile/profile';
 
 @Component({
-  imports: [Verify, NzIconModule, NzButtonModule],
+  imports: [Verify, NzIconModule, NzButtonModule, Profile],
   selector: 'app-user',
   styleUrl: './user.css',
   templateUrl: './user.html',
 })
 export class User {
-  readonly profileApi = inject(ProfileApi);
   private readonly router = inject(Router);
   readonly locale = inject(LanguageService);
-  private readonly authStorage = inject(AuthStorageService);
-  private readonly route = inject(Router);
   readonly text = this.locale.text;
   readonly activeTab = signal(0);
-  readonly profile = computed(() => {
-    const response = this.profileApi.profile();
-    const member = response?.member;
-    const locale = this.locale.language() === 'th' ? 'th-TH' : 'en-GB';
-    const birthDate = member?.m_birthdate;
-    return {
-      fullName: member ? `${member.m_name} ${member.m_lastname}`.trim() : '',
-      country: member?.m_country ?? '',
-      formattedBirthDate: birthDate
-        ? new Date(birthDate).toLocaleDateString(locale, {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-        : '',
-      phoneNumber: member?.m_phone ?? '',
-      email: member?.email ?? '',
-      username: member?.username ?? '',
-      profileImageUrl: member?.m_image_url ?? '',
-      initials: this.profileApi.initials(),
-    };
-  });
-
-  constructor() {
-    this.profileApi.loadProfile();
-  }
 
   openKycVerification(): void {
     void this.router.navigate(['/main/kyc-verification']);
@@ -90,10 +62,4 @@ export class User {
       details.push({ label: this.text().rejectionReason, value: record.rejectionReason });
     return { status, tone: tone as 'success' | 'warning' | 'danger', details };
   });
-
-  signOut(): void {
-    this.authStorage.clear();
-    this.profileApi.clear();
-    void this.route.navigate(['/login']);
-  }
 }

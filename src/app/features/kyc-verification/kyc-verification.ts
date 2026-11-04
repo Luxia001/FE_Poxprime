@@ -10,7 +10,7 @@ import {
 import {
   StatusModal,
   StatusModalType,
-} from '../../shared/components/modals/status-modal/status-modal';
+} from '../../shared/components/UI/modals/status-modal/status-modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';

@@ -16,7 +16,7 @@ import { RegisterApiService } from '../services/register-api';
 import {
   StatusModal,
   StatusModalType,
-} from '../../../shared/components/modals/status-modal/status-modal';
+} from '../../../shared/components/UI/modals/status-modal/status-modal';
 import { RegisterErrorResponse } from '../models/register-response';
 import { RegisterRequest } from '../models/register-request';
 

@@ -4,9 +4,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { TextHead } from '../../../shared/components/headers/text-head/text-head';
+import { TextHead } from '../../../shared/components/UI/headers/text-head/text-head';
 import { ProfileApi } from '../../../features/account/services/profile-api';
-import { SidebarButton } from '../../../shared/components/button/sidebar-button/sidebar-button';
+import { SidebarButton } from '../../../shared/components/UI/button/sidebar-button/sidebar-button';
 
 interface MenuItem {
   title: string;
