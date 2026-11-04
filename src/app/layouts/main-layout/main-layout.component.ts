@@ -7,7 +7,7 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
   standalone: true,
   imports: [RouterOutlet, Sidebar],
   template: `
-    <div class="min-h-dvh bg-[#F9FAFB] md:flex md:p-5">
+    <div class="relative md:flex min-h-dvh bg-[#F9FAFB] p-5">
       <button
         type="button"
         (click)="mobileSidebarOpen.set(true)"
@@ -28,7 +28,7 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
       }
 
       <div
-        class="absolute inset-y-0 left-0 z-50 w-72 p-3 transition-transform duration-300 md:static md:z-auto md:w-auto md:translate-x-0 md:p-0"
+        class="absolute inset-y-0 left-0 z-50 transition-transform duration-300 md:static md:translate-x-0 md:pr-5"
         [class.translate-x-0]="mobileSidebarOpen()"
         [class.-translate-x-full]="!mobileSidebarOpen()"
       >
@@ -43,7 +43,7 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
         <app-sidebar (navigated)="mobileSidebarOpen.set(false)" />
       </div>
 
-      <main class="min-w-0 flex-1 overflow-auto md:ml-5 ">
+      <main class="min-w-0 flex-1 w-full">
         <router-outlet />
       </main>
     </div>
