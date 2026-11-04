@@ -7,11 +7,7 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { RefreshTokenService } from '../services/refresh-token';
 
 // endpoint ที่ไม่ต้องใช้ token
-const PUBLIC_PATHS = [
-  '/v1/auth/login',
-  '/v1/member/register',
-  '/v1/auth/refresh',
-];
+const PUBLIC_PATHS = ['/v1/auth/login', '/v1/member/register'];
 
 export const apiInterceptor: HttpInterceptorFn = (request, next) => {
   const apiHost = environment.apiUrl;
@@ -46,11 +42,14 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (request, next) => {
   const router = inject(Router);
 
   const isApiRequest = request.url.startsWith(`${environment.apiUrl}/`);
-  const shouldSkip = PUBLIC_PATHS.some((path) => request.url.startsWith(`${environment.apiUrl}${path}`));
+  const shouldSkip = PUBLIC_PATHS.some((path) =>
+    request.url.startsWith(`${environment.apiUrl}${path}`),
+  );
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (!isApiRequest || !isExpiredAccessToken(error) || shouldSkip) return throwError(() => error);
+      if (!isApiRequest || !isExpiredAccessToken(error) || shouldSkip)
+        return throwError(() => error);
 
       return refreshService.refresh().pipe(
         // refresh ไม่สำเร็จ = หมดอายุจริง ให้ออกจากระบบ
@@ -76,7 +75,9 @@ function isExpiredAccessToken(error: HttpErrorResponse): boolean {
 
   const code = body.error?.code;
   const message = body.error?.message ?? body.message;
-  return code === 'ACCESS_TOKEN_VERIFICATION_FAILED' &&
+  return (
+    code === 'ACCESS_TOKEN_VERIFICATION_FAILED' &&
     typeof message === 'string' &&
-    message.toLowerCase().includes('jwt expired');
+    message.toLowerCase().includes('jwt expired')
+  );
 }

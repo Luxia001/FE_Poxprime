@@ -41,35 +41,35 @@ export class Sidebar {
     {
       header: 'General',
       menu: [
-        { title: 'Dashboard', icon: '', link: null },
-        { title: 'Profile', icon: '', link: null },
+        { title: 'Dashboard', icon: 'appstore', link: null },
+        { title: 'MT5 & Wallet', icon: 'wallet', link: null },
       ],
     },
     {
       header: 'Feature',
       menu: [
-        { title: 'Pip Battle', icon: '', link: null },
-        { title: 'Social Trade', icon: '', link: null },
-        { title: 'Guzebot', icon: '', link: null },
-        { title: 'Investment', icon: '', link: null },
-        { title: 'Rebate Program', icon: '', link: null },
-        { title: 'Transactions', icon: '', link: null },
+        { title: 'Pip Battle', icon: 'sketch', link: null },
+        { title: 'Social Trade', icon: 'usergroup-add', link: null },
+        { title: 'Guzebot', icon: 'robot', link: null },
+        { title: 'Investment', icon: 'credit-card', link: null },
+        { title: 'Rebate Program', icon: 'product', link: null },
+        { title: 'Transactions', icon: 'transaction', link: null },
       ],
     },
     {
       header: 'Partner Program',
       menu: [
-        { title: 'IB Partner', icon: '', link: null },
-        { title: 'Referrals', icon: '', link: null },
+        { title: 'IB Partner', icon: 'gateway', link: null },
+        { title: 'Referrals', icon: 'user-add', link: null },
       ],
     },
     {
       header: 'Account',
       menu: [
-        { title: 'Notification Center', icon: '', link: null },
+        { title: 'Notification Center', icon: 'bell', link: null },
         { title: 'Profile', icon: 'user', link: '/main/user' },
         { title: 'Account Security', icon: 'safety-certificate', link: '/main/security' },
-        { title: 'Download MT5', icon: '', link: null },
+        { title: 'Download MT5', icon: 'cloud-download', link: null },
       ],
     },
   ];

@@ -5,28 +5,26 @@
 >
   <!-- Header -->
   <div
-    class="flex h-16 shrink-0 items-center border-b border-white/10 px-4 bg-white text-[#001F3F] rounded-2xl shadow-sm"
+    class="grid items-center border border-gray-100 p-4 bg-white text-[#001F3F] rounded-2xl shadow-sm"
     [class.justify-between]="!isCollapsed()"
     [class.justify-center]="isCollapsed()"
   >
+    <div class="flex justify-between">
+      @if (!isCollapsed()) {
+        <span class="text-2xl font-bold">POXPRIME</span>
+      }
+      <button
+        type="button"
+        (click)="toggleCollapsed()"
+        class="hidden h-9 w-9 items-center justify-center rounded-lg text-slate-300 transition hover:bg-white/10 hover:text-white md:flex"
+        aria-label="Toggle sidebar"
+      >
+        <nz-icon [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'" />
+      </button>
+    </div>
+
     @if (!isCollapsed()) {
-      <span class="m-0 text-2xl font-semibold tracking-widest">POXPRIME</span>
-    }
-    <button
-      type="button"
-      (click)="toggleCollapsed()"
-      class="hidden h-9 w-9 items-center justify-center rounded-lg text-slate-300 transition hover:bg-white/10 hover:text-white md:flex"
-      aria-label="Toggle sidebar"
-    >
-      <nz-icon [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'" />
-    </button>
-  </div>
-
-  <!-- Profile + Balance -->
-
-  @if (!isCollapsed()) {
-    <div class="shrink-0">
-      <div class="rounded-2xl bg-white p-4 text-slate-800 shadow-sm">
+      <div class="bg-white p-4 text-slate-800">
         <div class="flex items-center gap-3">
           <nz-avatar [nzSize]="48" nzIcon="user" [nzSrc]="profileApi.profile()?.imageUrl || ''" />
           <div class="min-w-0">
@@ -44,11 +42,13 @@
 
         <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
           <span class="text-xs text-slate-500">Available Balance</span>
-          <span class="text-lg font-bold text-blue-600">$ 3,000</span>
+          <span class="text-lg font-bold text-blue-600">$ 0</span>
         </div>
       </div>
-    </div>
-  }
+    }
+  </div>
+
+  <!-- Profile + Balance -->
 
   <nav class="flex-1 rounded-2xl bg-white p-5 shadow-sm">
     @for (menu of accountMenus; track menu.header) {
@@ -68,5 +68,4 @@
       </section>
     }
   </nav>
-
 </aside>

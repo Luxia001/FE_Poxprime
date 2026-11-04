@@ -7,11 +7,11 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
   standalone: true,
   imports: [RouterOutlet, Sidebar],
   template: `
-    <div class="min-h-screen bg-[#F9FAFB] p-3 md:flex md:p-5">
+    <div class="min-h-dvh bg-[#F9FAFB] md:flex md:p-5">
       <button
         type="button"
         (click)="mobileSidebarOpen.set(true)"
-        class="fixed left-4 top-4 z-30 flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-xl text-slate-700 shadow-md md:hidden"
+        class="sticky left-4 top-4 z-30 flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-xl text-slate-700 shadow-md md:hidden"
         aria-label="Open navigation"
         [attr.aria-expanded]="mobileSidebarOpen()"
       >
@@ -28,7 +28,7 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
       }
 
       <div
-        class="fixed inset-y-0 left-0 z-50 w-72 p-3 transition-transform duration-300 md:static md:z-auto md:w-auto md:translate-x-0 md:p-0"
+        class="absolute inset-y-0 left-0 z-50 w-72 p-3 transition-transform duration-300 md:static md:z-auto md:w-auto md:translate-x-0 md:p-0"
         [class.translate-x-0]="mobileSidebarOpen()"
         [class.-translate-x-full]="!mobileSidebarOpen()"
       >
@@ -43,7 +43,7 @@ import { Sidebar } from '../../core/components/sidebar/sidebar';
         <app-sidebar (navigated)="mobileSidebarOpen.set(false)" />
       </div>
 
-      <main class="min-w-0 flex-1 overflow-auto pt-16 md:ml-5 md:pt-0">
+      <main class="min-w-0 flex-1 overflow-auto md:ml-5 ">
         <router-outlet />
       </main>
     </div>
