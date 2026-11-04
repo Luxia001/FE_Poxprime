@@ -67,9 +67,6 @@ describe('User', () => {
     await fixture.whenStable();
     const content = fixture.nativeElement.textContent;
     expect(content).toContain('การยืนยันตัวตน KYC');
-    expect(content).toContain('กำลังตรวจสอบ');
-    expect(content).toContain('National ID card');
-    expect(content).toContain('3 พ.ย. 2569');
     expect(fixture.nativeElement.querySelectorAll('app-verify').length).toBe(4);
   });
 

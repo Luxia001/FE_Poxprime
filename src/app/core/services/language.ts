@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { en_US, NzI18nService, th_TH } from 'ng-zorro-antd/i18n';
-import { translations } from '../18n';
+import { translations } from '../../shared/pipes/18n';
 
 export type Language = 'th' | 'en';
 

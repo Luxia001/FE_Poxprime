@@ -13,12 +13,14 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiInterceptor, refreshTokenInterceptor } from './core/interceptors/api.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideAnimationsAsync(),
     provideRouter(routes),
     provideNzI18n(en_US),
     provideNzIcons([GoogleOutline, MailOutline, PhoneOutline, SafetyOutline]),

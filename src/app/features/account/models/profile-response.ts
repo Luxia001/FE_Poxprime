@@ -12,6 +12,7 @@ export interface ProfileMember {
   m_country: string | null;
   m_state: string | null;
   m_identity: string | null;
+  m_birthdate?: string | null;
   isActive: number;
   isConfirm: number;
   isKYC: number;
@@ -59,18 +60,3 @@ export interface ProfileErrorResponse {
 }
 
 export type ProfileResponse = ProfileSuccessResponse | ProfileErrorResponse;
-
-export interface UserProfile {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  phone: string;
-  country: string | null;
-  imageUrl: string;
-  isKYC: boolean;
-  isTrusted: boolean;
-  createdAt: Date;
-}

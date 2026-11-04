@@ -1,60 +1,223 @@
 <section class="w-full">
   <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-    <a routerLink="/main/user" class="text-sm font-medium text-blue-700 hover:underline">← Back to user profile</a>
-    <div class="mt-5 border-b border-slate-200 pb-5">
-      <p class="m-0 text-xs font-semibold uppercase tracking-widest text-blue-700">Identity verification</p>
-      <h1 class="mb-0 mt-2 text-2xl font-bold text-slate-900">KYC Verification</h1>
-      <p class="mb-0 mt-2 text-sm text-slate-500">Complete your personal and address information before requesting an OTP.</p>
-    </div>
+    <a routerLink="/main/user" class="text-sm font-medium text-blue-700 hover:underline">← Back</a>
 
     @if (otpRequested()) {
-      <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800" role="status">
+      <div
+        class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800"
+        role="status"
+      >
         OTP request initiated. The OTP verification form can be connected in the next step.
       </div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="submitForm()" novalidate class="mt-6 grid gap-6">
-      <fieldset class="grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2 sm:p-5">
-        <legend class="px-2 font-semibold text-slate-800">Personal information</legend>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">First name <span class="text-red-500">*</span>
-          <input formControlName="firstName" class="h-11 rounded-lg border border-slate-300 px-3 font-normal outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Last name <span class="text-red-500">*</span>
-          <input formControlName="lastName" class="h-11 rounded-lg border border-slate-300 px-3 font-normal outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Gender <span class="text-red-500">*</span>
-          <select formControlName="gender" class="h-11 rounded-lg border border-slate-300 bg-white px-3 font-normal"><option value="MALE">Male</option><option value="FEMALE">Female</option><option value="OTHER">Other</option></select>
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Date of birth <span class="text-red-500">*</span>
-          <input type="date" formControlName="birthDate" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Nationality <span class="text-red-500">*</span>
-          <input formControlName="nationality" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Country <span class="text-red-500">*</span>
-          <input formControlName="country" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
-        </label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700 sm:col-span-2">Passport / Identity number <span class="text-red-500">*</span>
-          <input formControlName="identity" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" />
-        </label>
-        <div class="grid gap-2 sm:col-span-2"><span class="text-sm font-medium text-slate-700">Phone number <span class="text-red-500">*</span></span>
-          <div class="grid grid-cols-[6rem_1fr] gap-2"><input formControlName="phoneCode" class="h-11 rounded-lg border border-slate-300 px-3" /><input formControlName="phoneNumber" inputmode="numeric" class="h-11 min-w-0 rounded-lg border border-slate-300 px-3" /></div>
+    <form
+      nz-form
+      nzLayout="vertical"
+      [formGroup]="profile"
+      (ngSubmit)="submitForm()"
+      class="kyc-form mt-8"
+      novalidate
+    >
+      <fieldset class="rounded-xl border border-slate-200 px-4 pb-1 pt-5 sm:px-6 sm:pt-6">
+        <legend class="px-3 text-xl font-bold text-slate-800 sm:text-2xl">
+          General information
+        </legend>
+        <div class="mt-2 grid gap-x-6 sm:grid-cols-2">
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="firstName">First name (Eng)</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your first name.">
+              <input nz-input id="firstName" formControlName="firstName" placeholder="First name" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="lastName">Last name (Eng)</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your last name.">
+              <input nz-input id="lastName" formControlName="lastName" placeholder="Last name" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="gender">Gender</nz-form-label>
+            <nz-form-control nzErrorTip="Please select your gender.">
+              <nz-select
+                id="gender"
+                formControlName="gender"
+                nzPlaceHolder="Select gender"
+                class="w-full"
+                [nzStatus]="
+                  profile.controls.gender.dirty && profile.controls.gender.invalid ? 'error' : ''
+                "
+              >
+                <nz-option nzValue="MALE" nzLabel="Male"></nz-option>
+                <nz-option nzValue="FEMALE" nzLabel="Female"></nz-option>
+                <nz-option nzValue="OTHER" nzLabel="Other"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="birthDate">Date of birth</nz-form-label>
+            <nz-form-control nzErrorTip="Please select your date of birth.">
+              <input nz-input id="birthDate" type="date" formControlName="birthDate" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="nationality">Nationality</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your nationality.">
+              <input
+                nz-input
+                id="nationality"
+                formControlName="nationality"
+                placeholder="Nationality"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="country">Country</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your country.">
+              <input nz-input id="country" formControlName="country" placeholder="Country" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="sm:col-span-2">
+            <nz-form-label nzRequired nzFor="identity">Passport / Identity number</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your passport or identity number.">
+              <input
+                nz-input
+                id="identity"
+                formControlName="identity"
+                placeholder="Passport or identity number"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <div class="grid gap-x-3 sm:col-span-2 sm:grid-cols-[8rem_1fr]">
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="phoneCode">Phone code</nz-form-label>
+              <nz-form-control nzErrorTip="Please select a phone code.">
+                <nz-select
+                  id="phoneCode"
+                  formControlName="phoneCode"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="+66"
+                  class="w-full"
+                  [nzCustomTemplate]="selected"
+                >
+                  @for (item of phoneCodes; track item.code + item.country) {
+                    <nz-option
+                      [nzValue]="item.code"
+                      [nzLabel]="item.code + ' — ' + item.country"
+                    ></nz-option>
+                  }
+                </nz-select>
+
+                <!-- ตอนเลือกแล้วให้แสดงแค่ +66 (ในลิสต์ยังเห็นชื่อประเทศ) -->
+                <ng-template #selected let-selected>
+                  {{ selected.nzValue }}
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired nzFor="phoneNumber">Phone number</nz-form-label>
+              <nz-form-control nzErrorTip="Enter 5–14 digits.">
+                <input
+                  nz-input
+                  id="phoneNumber"
+                  formControlName="phoneNumber"
+                  inputmode="numeric"
+                  placeholder="Phone number"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
         </div>
       </fieldset>
 
-      <fieldset class="grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2 sm:p-5">
-        <legend class="px-2 font-semibold text-slate-800">Address</legend>
-        <label class="grid gap-2 text-sm font-medium text-slate-700 sm:col-span-2">Address <span class="text-red-500">*</span><input formControlName="addressNo" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">District<input formControlName="district" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">City <span class="text-red-500">*</span><input formControlName="city" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">State / Province<input formControlName="state" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
-        <label class="grid gap-2 text-sm font-medium text-slate-700">Postal code <span class="text-red-500">*</span><input formControlName="zipCode" inputmode="numeric" class="h-11 rounded-lg border border-slate-300 px-3 font-normal" /></label>
+      <fieldset class="mt-8 rounded-xl border border-slate-200 px-4 pb-1 pt-5 sm:px-6 sm:pt-6">
+        <legend class="px-3 text-xl font-bold text-slate-800 sm:text-2xl">Address</legend>
+        <div class="mt-2 grid gap-x-6 sm:grid-cols-2">
+          <nz-form-item class="sm:col-span-2">
+            <nz-form-label nzRequired nzFor="addressNo">Address</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your address.">
+              <input nz-input id="addressNo" formControlName="addressNo" placeholder="Address" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="district">District</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your district."
+              ><input nz-input id="district" formControlName="district" placeholder="District"
+            /></nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="city">City</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your city.">
+              <input nz-input id="city" formControlName="city" placeholder="City" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="state">State / Province</nz-form-label>
+            <nz-form-control nzErrorTip="Please enter your state or province."
+              ><input nz-input id="state" formControlName="state" placeholder="State or province"
+            /></nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="zipCode">Zipcode</nz-form-label>
+            <nz-form-control nzErrorTip="Enter a valid postal code.">
+              <input
+                nz-input
+                id="zipCode"
+                formControlName="zipCode"
+                inputmode="numeric"
+                placeholder="Postal code"
+              />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
       </fieldset>
 
-      @if (submitted() && form.invalid) { <p class="m-0 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">Please complete all required fields with valid information.</p> }
-      <button type="submit" class="h-12 rounded-lg border-0 bg-blue-700 px-6 font-semibold text-white hover:bg-blue-800">Save and continue</button>
+      <button
+        nz-button
+        nzType="primary"
+        type="submit"
+        [nzLoading]="modalOpen() && modalType() === 'loading'"
+        class="mt-6 h-11! w-full rounded-lg! bg-(--primary-theme--)! text-white!"
+      >
+        Next
+      </button>
     </form>
   </div>
 </section>
 
-<app-status-modal [open]="modalOpen()" [type]="modalType()" [title]="modalTitle()" [message]="modalMessage()" [details]="modalDetails()" [actionLabel]="modalType() === 'success' ? 'Send OTP' : 'Try again'" (closed)="closeModal()" (confirmed)="modalAction()" />
+@if (otpModalOpen()) {
+  <div class="fixed inset-0 z-100 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm" role="presentation">
+    <section class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="otp-modal-title">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h2 id="otp-modal-title" class="m-0 text-xl font-bold text-slate-900">Verify OTP</h2>
+          <p class="mb-0 mt-2 text-sm text-slate-500">Enter the 6-digit code sent to your phone.</p>
+        </div>
+        <button type="button" (click)="otpModalOpen.set(false)" class="flex size-9 items-center justify-center rounded-lg border-0 bg-slate-100 text-xl text-slate-600">×</button>
+      </div>
+
+      <div class="mt-6">
+        <app-code-otp [control]="otp" />
+      </div>
+      @if (otpError()) {
+        <p class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">{{ otpError() }}</p>
+      }
+      <div class="mt-6 grid gap-3 sm:grid-cols-2">
+        <button type="button" (click)="sendOtp()" [disabled]="otpSubmitting()" class="h-11 rounded-lg border border-blue-700 bg-white font-semibold text-blue-700 disabled:opacity-50">Resend OTP</button>
+        <button nz-button nzType="primary" type="button" (click)="verifyOtp()" [nzLoading]="otpSubmitting()" class="h-11! rounded-lg! bg-blue-700! text-white!">Verify OTP</button>
+      </div>
+    </section>
+  </div>
+}
+
+<app-status-modal
+  [open]="modalOpen()"
+  [type]="modalType()"
+  [title]="modalTitle()"
+  [message]="modalMessage()"
+  [details]="modalDetails()"
+  [actionLabel]="modalType() === 'success' ? (sendOtpOnConfirm() ? 'Send OTP' : 'Continue') : 'Try again'"
+  (closed)="closeModal()"
+  (confirmed)="modalAction()"
+/>

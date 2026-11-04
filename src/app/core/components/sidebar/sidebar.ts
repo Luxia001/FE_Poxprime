@@ -1,4 +1,4 @@
-import { Component, inject, model, output } from '@angular/core';
+import { Component, computed, inject, model, output } from '@angular/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -37,6 +37,14 @@ export class Sidebar {
   readonly isCollapsed = model(false);
   readonly navigated = output<void>();
   readonly profileApi = inject(ProfileApi);
+  readonly profileDisplay = computed(() => {
+    const response = this.profileApi.profile();
+    return {
+      fullName: `${response?.member.m_name} ${response?.member.m_lastname}`.trim(),
+      email: response?.member.email,
+      imageUrl: response?.member.m_image_url,
+    };
+  });
   readonly accountMenus: SidebarMenu[] = [
     {
       header: 'General',

@@ -26,11 +26,11 @@
     @if (!isCollapsed()) {
       <div class="bg-white p-4 text-slate-800">
         <div class="flex items-center gap-3">
-          <nz-avatar [nzSize]="48" nzIcon="user" [nzSrc]="profileApi.profile()?.imageUrl || ''" />
+          <nz-avatar [nzSize]="48" nzIcon="user" [nzSrc]="profileDisplay()?.imageUrl || ''" />
           <div class="min-w-0">
             @if (profileApi.loading()) {
               <p class="text-sm text-slate-400">Loading profile...</p>
-            } @else if (profileApi.profile(); as profile) {
+            } @else if (profileDisplay(); as profile) {
               <p class="truncate text-sm font-semibold">{{ profile.fullName }}</p>
               <p class="truncate text-xs text-slate-500">{{ profile.email }}</p>
             } @else {

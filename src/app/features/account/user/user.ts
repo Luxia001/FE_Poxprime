@@ -23,33 +23,25 @@ export class User {
   readonly text = this.locale.text;
   readonly activeTab = signal(0);
   readonly profile = computed(() => {
-    const data = this.profileApi.profile();
-    if (!data) {
-      return {
-        id: 0,
-        username: '',
-        email: '',
-        fullName: '',
-        phoneNumber: '',
-        country: null,
-        profileImageUrl: '',
-        initials: '',
-        formattedBirthDate: '',
-        referralCode: '',
-        formattedCreatedAt: '',
-      };
-    }
+    const response = this.profileApi.profile();
+    const member = response?.member;
     const locale = this.locale.language() === 'th' ? 'th-TH' : 'en-GB';
+    const birthDate = member?.m_birthdate;
     return {
-      ...data,
-      phoneNumber: data.phone,
-      profileImageUrl: data.imageUrl,
-      formattedBirthDate: '',
-      referralCode: '',
+      fullName: member ? `${member.m_name} ${member.m_lastname}`.trim() : '',
+      country: member?.m_country ?? '',
+      formattedBirthDate: birthDate
+        ? new Date(birthDate).toLocaleDateString(locale, {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+        : '',
+      phoneNumber: member?.m_phone ?? '',
+      email: member?.email ?? '',
+      username: member?.username ?? '',
+      profileImageUrl: member?.m_image_url ?? '',
       initials: this.profileApi.initials(),
-      formattedCreatedAt: new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
-        data.createdAt,
-      ),
     };
   });
 

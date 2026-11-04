@@ -22,10 +22,15 @@ describe('ProfileApi', () => {
   it('should expose the mapped profile through a signal', () => {
     service.loadProfile();
     http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush(profileResponse);
-    expect(service.profile()?.fullName).toBe('John Doe');
-    expect(service.profile()?.phone).toBe('+66812345678');
+    const profile = service.profile();
+    expect(profile && 'member' in profile ? profile.member.m_name : null).toBe('John');
+    expect(profile && 'member' in profile ? profile.member.m_lastname : null).toBe('Doe');
+    expect(profile && 'member' in profile ? profile.member.m_phone : null).toBe('812345678');
+    expect(profile && 'member' in profile ? profile.address.address_stat : null).toBe(1);
+    expect(profile && 'member' in profile ? profile.isTrusted : null).toBe(true);
     expect(service.initials()).toBe('JD');
   });
+
 });
 
 const profileResponse = {

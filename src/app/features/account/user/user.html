@@ -185,7 +185,6 @@
             <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h3 class="m-0 text-lg font-bold text-slate-900">{{ text().verifyMenuTitle }}</h3>
-                <p class="mb-0 mt-1 text-sm text-slate-500">{{ text().verifyHint }}</p>
               </div>
             </div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -193,9 +192,6 @@
                 [title]="text().kycVerification"
                 [description]="text().kycDescription"
                 iconType="safety"
-                [status]="kycCard().status"
-                [statusTone]="kycCard().tone"
-                [details]="kycCard().details"
                 [actionLabel]="kycResponse().data.kyc_stat"
                 (action)="openKycVerification()"
               />
@@ -203,24 +199,18 @@
                 [title]="text().authenticator"
                 [description]="text().authenticatorHint"
                 iconType="google"
-                [status]="text().status.notEnabled"
-                statusTone="warning"
                 [actionLabel]="1"
               />
               <app-verify
                 [title]="text().phoneVerification"
                 [description]="text().phoneVerifiedHint"
                 iconType="phone"
-                [status]="text().status.verified"
-                statusTone="success"
-                [actionLabel]="2"
+                [actionLabel]="1"
               />
               <app-verify
                 [title]="text().emailVerification"
                 [description]="text().emailVerifiedHint"
                 iconType="mail"
-                [status]="text().status.verified"
-                statusTone="success"
                 [actionLabel]="3"
               />
             </div>
