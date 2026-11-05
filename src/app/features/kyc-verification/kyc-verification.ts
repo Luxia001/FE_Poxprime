@@ -16,8 +16,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { PHONE_CODES } from '../../shared/pipes/phoneCode';
-import { VerifyApi } from '../../shared/services/verify-sms.service';
 import { CodeOTP } from '../auth/register/steps/code-otp/code-otp';
+import { VerifyApi } from '../../shared/services/verify/verify-sms.service';
 
 @Component({
   imports: [

@@ -15,28 +15,13 @@
 
   <h3 class="mb-0 mt-4 text-base font-bold text-slate-900">{{ title() }}</h3>
   <p class="mb-0 mt-2 text-sm text-center leading-6 text-slate-500">{{ description() }}</p>
-
-  @switch (actionLabel()) {
-    @case (1) {
-      @if (status()) {
-        <span class="rounded-full bg-white/70 px-2.5 py-1 text-xs text-center font-semibold">{{
-          status()
-        }}</span>
-      }
-    }
-    @case (2) {
-      <button
-        type="button"
-        (click)="action.emit()"
-        class="mt-auto w-full rounded-lg border border-blue-700 bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      >
-        {{ status() }}
-      </button>
-    }
-    @case (3) {
-      <button type="button" (click)="action.emit()" class="underline">
-        {{ status() }}
-      </button>
-    }
-  }
+@if (mode() === 'badge') {
+  <span class="rounded-full bg-white/70 px-2.5 py-1 text-center text-xs font-semibold">
+    {{ status() }}
+  </span>
+} @else {
+  <button type="button" (click)="action.emit()" class="underline">
+    {{ status() }}
+  </button>
+}
 </article>

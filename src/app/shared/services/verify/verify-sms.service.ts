@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import {
   SendSmsOtpData,
-  SendSmsOtpRequest,
   SendSmsOtpResponse,
   VerifySmsOtpRequest,
   VerifySmsOtpResponse,
   VerifySmsOtpSuccessResponse,
-} from '../models/verify-sms.model';
+} from '../../models/verify-sms.model';
 
 @Injectable({ providedIn: 'root' })
 export class VerifyApi {

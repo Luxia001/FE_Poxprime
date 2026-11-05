@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { LanguageService } from '../../../../core/services/language';
 import { ProfileApi } from '../../../../features/account/services/profile-api';
 import { AuthStorageService } from '../../../../core/services/auth-storage';
@@ -14,36 +14,22 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 })
 export class Profile {
   private readonly route = inject(Router);
-  private readonly authStorage = inject(AuthStorageService);
   readonly locale = inject(LanguageService);
   readonly text = this.locale.text;
   readonly profileApi = inject(ProfileApi);
-  readonly profile = computed(() => {
-    const response = this.profileApi.profile();
-    const member = response?.member;
-    const locale = this.locale.language() === 'th' ? 'th-TH' : 'en-GB';
-    const birthDate = member?.m_birthdate;
-    return {
-      fullName: member ? `${member.m_name} ${member.m_lastname}`.trim() : '',
-      country: member?.m_country ?? '',
-      formattedBirthDate: birthDate
-        ? new Date(birthDate).toLocaleDateString(locale, {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-        : '',
-      phoneNumber: member?.m_phone ?? '',
-      email: member?.email ?? '',
-      username: member?.username ?? '',
-      profileImageUrl: member?.m_image_url ?? '',
-      initials: this.profileApi.initials(),
-    };
-  });
+  private readonly authStorage = inject(AuthStorageService);
 
-  constructor() {
-    this.profileApi.loadProfile();
-  }
+  readonly profile = input.required<{
+    fullName: string;
+    country: string;
+    formattedBirthDate: string;
+    phoneNumber: string;
+    email: string;
+    username: string;
+    profileImageUrl: string;
+    initials: string;
+  }>();
+
   signOut(): void {
     this.authStorage.clear();
     this.profileApi.clear();

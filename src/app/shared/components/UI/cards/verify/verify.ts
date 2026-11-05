@@ -8,11 +8,14 @@ export interface VerifyCardDetail {
 }
 
 type StatusTone = 'success' | 'warning' | 'danger' | 'neutral';
-type StatusKey = 'pending' | 'verified' | 'notVerified';
+type StatusKey = 'pending' | 'verified' | 'notVerified' | 'notEnabled';
+type DisplayMode = 'badge' | 'link';
 
-const STATE_MAP: Record<number, { status: StatusKey; tone: StatusTone }> = {
-  1: { status: 'verified', tone: 'success' },
-  3: { status: 'notVerified', tone: 'warning' },
+const STATE_MAP: Record<number, { status: StatusKey; tone: StatusTone; mode: DisplayMode }> = {
+  0: { status: 'pending', tone: 'warning', mode: 'badge' },
+  1: { status: 'verified', tone: 'success', mode: 'badge' },
+  2: { status: 'notVerified', tone: 'danger', mode: 'link' },
+  3: { status: 'notEnabled', tone: 'neutral', mode: 'link' },
 };
 
 @Component({
@@ -25,14 +28,14 @@ export class Verify {
   readonly title = input('Title');
   readonly description = input('description');
   readonly iconType = input('safety');
-  readonly actionLabel = input(3);
+  readonly actionLabel = input(0);
   readonly action = output<void>();
 
   private readonly locale = inject(LanguageService);
   readonly text = this.locale.text;
-
   private readonly state = computed(() => STATE_MAP[this.actionLabel()] ?? STATE_MAP[3]);
 
   readonly status = computed(() => this.text().status[this.state().status]);
   readonly statusTone = computed(() => this.state().tone);
+  readonly mode = computed(() => this.state().mode);
 }

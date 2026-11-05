@@ -48,15 +48,10 @@
     >
       @switch (activeTab()) {
         @case (0) {
-          <app-profile></app-profile>
+          <app-profile [profile]="profile()"></app-profile>
         }
         @case (1) {
           <div class="flex flex-col items-center py-10 text-center">
-            <div
-              class="mb-4 flex size-12 items-center justify-center rounded-full bg-blue-50 text-xl text-blue-700"
-            >
-              ▣
-            </div>
             <h3 class="m-0 text-base font-semibold">{{ text().noBank }}</h3>
             <p class="mt-2 text-sm text-slate-500">{{ text().bankHint }}</p>
             <button
@@ -69,11 +64,6 @@
         }
         @case (2) {
           <div class="flex flex-col items-center py-10 text-center">
-            <div
-              class="mb-4 flex size-12 items-center justify-center rounded-full bg-cyan-50 text-xl text-cyan-700"
-            >
-              ◇
-            </div>
             <h3 class="m-0 text-base font-semibold">{{ text().noWallet }}</h3>
             <p class="mt-2 text-sm text-slate-500">{{ text().walletHint }}</p>
             <button
@@ -86,36 +76,32 @@
         }
         @case (3) {
           <div class="py-5">
-            <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h3 class="m-0 text-lg font-bold text-slate-900">{{ text().verifyMenuTitle }}</h3>
-              </div>
-            </div>
+            <h3 class="text-lg font-bold text-slate-900">{{ text().verifyMenuTitle }}</h3>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
               <app-verify
                 [title]="text().kycVerification"
                 [description]="text().kycDescription"
                 iconType="safety"
-                [actionLabel]="kycResponse().data.kyc_stat"
+                [actionLabel]="VerifyStatus().kyc"
                 (action)="openKycVerification()"
               />
               <app-verify
                 [title]="text().authenticator"
                 [description]="text().authenticatorHint"
                 iconType="google"
-                [actionLabel]="1"
+                [actionLabel]="2"
               />
               <app-verify
                 [title]="text().phoneVerification"
                 [description]="text().phoneVerifiedHint"
                 iconType="phone"
-                [actionLabel]="1"
+                [actionLabel]="VerifyStatus().phone"
               />
               <app-verify
                 [title]="text().emailVerification"
                 [description]="text().emailVerifiedHint"
                 iconType="mail"
-                [actionLabel]="3"
+                [actionLabel]="emailVerifyStatus()"
               />
             </div>
           </div>
