@@ -1,0 +1,14 @@
+<main class="flex min-h-dvh items-center justify-center bg-slate-50 p-4">
+  <section class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+    @if (loading()) {
+      <nz-spin nzSimple nzSize="large" />
+      <h1 class="mb-0 mt-6 text-xl font-bold text-slate-900">Verifying your email</h1>
+      <p class="mb-0 mt-2 text-sm text-slate-500">Please wait while we confirm your verification link.</p>
+    } @else if (error()) {
+      <div class="mx-auto flex size-14 items-center justify-center rounded-full bg-red-50 text-2xl text-red-600">!</div>
+      <h1 class="mb-0 mt-5 text-xl font-bold text-slate-900">Verification failed</h1>
+      <p class="mb-0 mt-2 text-sm text-red-600" role="alert">{{ error() }}</p>
+      <a routerLink="/login" class="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-blue-700 px-6 font-semibold text-white transition hover:bg-blue-800">Back to login</a>
+    }
+  </section>
+</main>

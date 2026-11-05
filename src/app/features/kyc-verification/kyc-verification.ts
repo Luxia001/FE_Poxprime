@@ -22,6 +22,8 @@ import { Image } from '../../shared/components/UI/input/image/image';
 import { KycApi } from '../../shared/services/verify/kyc.service';
 import { KycIdType } from '../../shared/models/kyc-image';
 import { finalize } from 'rxjs';
+import { maxBirthDate, minAge } from '../../shared/pipes/validate-age.validators';
+import { LanguageService } from '../../core/services/language';
 
 @Component({
   imports: [
@@ -44,7 +46,10 @@ export class KycVerification {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly verifyApi = inject(VerifyApi);
   private readonly kycApi = inject(KycApi);
+  readonly locale = inject(LanguageService);
+  readonly text = this.locale.text;
   private readonly profilePatched = signal(false);
+  readonly maxBirthDate = maxBirthDate(18);
   readonly submitted = signal(false);
   readonly modalOpen = signal(false);
   readonly modalType = signal<StatusModalType>('loading');
@@ -70,7 +75,7 @@ export class KycVerification {
     nationality: ['', Validators.required],
     country: ['', Validators.required],
     identity: ['', Validators.required],
-    birthDate: ['', Validators.required],
+    birthDate: ['', [Validators.required, minAge(18)]],
     phoneCode: ['+66', [Validators.required, Validators.pattern(/^\+\d{1,3}$/)]],
     phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{5,14}$/)]],
     addressNo: ['', Validators.required],
@@ -242,12 +247,18 @@ export class KycVerification {
     const file = this.idFile();
     if (!file) {
       this.otpSubmitting.set(false);
-      this.otpError.set('Identity document image is required. Please close this dialog and select a file.');
+      this.otpError.set(
+        'Identity document image is required. Please close this dialog and select a file.',
+      );
       return;
     }
 
     this.otpModalOpen.set(false);
-    this.showModal('loading', 'Uploading document', 'OTP verified. Please wait while we upload your identity document.');
+    this.showModal(
+      'loading',
+      'Uploading document',
+      'OTP verified. Please wait while we upload your identity document.',
+    );
     this.kycApi
       .upload(file, this.idType())
       .pipe(finalize(() => this.otpSubmitting.set(false)))

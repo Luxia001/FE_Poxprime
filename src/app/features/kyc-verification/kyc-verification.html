@@ -58,10 +58,28 @@
           </nz-form-item>
           <nz-form-item>
             <nz-form-label nzRequired nzFor="birthDate">Date of birth</nz-form-label>
-            <nz-form-control nzErrorTip="Please select your date of birth.">
-              <input nz-input id="birthDate" type="date" formControlName="birthDate" />
+            <nz-form-control [nzErrorTip]="birthDateError">
+              <input
+                nz-input
+                id="birthDate"
+                type="date"
+                formControlName="birthDate"
+                [max]="maxBirthDate"
+              />
             </nz-form-control>
           </nz-form-item>
+
+          <ng-template #birthDateError let-control>
+            @if (control.hasError('required')) {
+              Please select your date of birth.
+            } @else if (control.hasError('minAge')) {
+              You must be at least 18 years old.
+            } @else if (control.hasError('futureDate')) {
+              Date of birth cannot be in the future.
+            } @else if (control.hasError('invalidDate')) {
+              Invalid date.
+            }
+          </ng-template>
           <nz-form-item>
             <nz-form-label nzRequired nzFor="nationality">Nationality</nz-form-label>
             <nz-form-control nzErrorTip="Please enter your nationality.">

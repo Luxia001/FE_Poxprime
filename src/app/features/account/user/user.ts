@@ -64,6 +64,6 @@ export class User {
   }
 
   openKycVerification(): void {
-    void this.router.navigate(['/main/kyc-verification']);
+    void this.router.navigate(['/account/kyc-verification']);
   }
 }

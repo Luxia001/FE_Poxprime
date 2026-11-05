@@ -7,7 +7,7 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { RefreshTokenService } from '../services/refresh-token';
 
 // endpoint ที่ไม่ต้องใช้ token
-const PUBLIC_PATHS = ['/v1/auth/login', '/v1/member/register'];
+const PUBLIC_PATHS = ['/v1/auth/login', '/v1/member/register', '/v1/member/verification/'];
 
 export const apiInterceptor: HttpInterceptorFn = (request, next) => {
   const apiHost = environment.apiUrl;

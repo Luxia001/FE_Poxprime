@@ -14,6 +14,11 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: 'login',
+  }, // app.routes.ts (อยู่นอก authGuard, ใต้ auth layout หรือ route เดี่ยว)
+  {
+    path: 'v1/member/verification/:token',
+    loadComponent: () =>
+      import('./features/auth/login/login-email.component').then((m) => m.VerifyEmail),
   },
   {
     path: '',
