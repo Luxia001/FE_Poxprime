@@ -1,8 +1,9 @@
+import { KycIdType, KycUploadData, KycUploadResponse } from './../../models/kyc-image';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { KycRecord, KycResponse } from '../../models/kyc.model';
-import { finalize, map } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class KycApi {
@@ -35,6 +36,21 @@ export class KycApi {
         error: (err: { message?: string }) =>
           this.errorState.set(err.message ?? 'Failed to load KYC'),
       });
+  }
+
+  upload(file: File, kycIdType: KycIdType): Observable<KycUploadData> {
+    const body = new FormData();
+    body.append('kycImage', file);
+    body.append('kycIdType', kycIdType);
+
+    return this.http
+      .post<KycUploadResponse>(`${environment.apiUrl}/v1/verify/kyc/image`, body)
+      .pipe(
+        map((res) => {
+          if (!res.result) throw res;
+          return res.data;
+        }),
+      );
   }
 
   clear(): void {

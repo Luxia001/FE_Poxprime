@@ -43,6 +43,7 @@ describe('KycVerification', () => {
       identity: 'AA123456', birthDate: '1990-01-15', phoneCode: '+66', phoneNumber: '812345678',
       addressNo: '1/1', district: 'Pathum Wan', city: 'Bangkok', state: 'Bangkok', zipCode: '10330',
     });
+    component.idFile.set(new File(['identity-image'], 'identity.png', { type: 'image/png' }));
     component.submitForm();
 
     const update = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile/update');
@@ -65,7 +66,13 @@ describe('KycVerification', () => {
     const verifyOtp = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/sms/verify');
     expect(verifyOtp.request.body).toEqual({ memberRef: 'member-ref-1', otpCode: '123456', optional: 'KYC' });
     verifyOtp.flush({ result: true, message: 'OTP verified', code: 200 });
+    const upload = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/kyc/image');
+    expect(upload.request.method).toBe('POST');
+    expect(upload.request.body.get('kycImage').name).toBe('identity.png');
+    expect(upload.request.body.get('kycIdType')).toBe('National ID card');
+    upload.flush({ result: true, message: 'Uploaded', data: { kycIdType: 'National ID card', imageUrl: 'https://example.com/id.png' }, code: 200 });
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/kyc').flush({ result: false, message: 'Refresh later', code: 503 }, { status: 503, statusText: 'Unavailable' });
     expect(component.otpModalOpen()).toBe(false);
-    expect(component.modalTitle()).toBe('OTP verified');
+    expect(component.modalTitle()).toBe('KYC submitted');
   });
 });

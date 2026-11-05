@@ -18,6 +18,10 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { PHONE_CODES } from '../../shared/pipes/phoneCode';
 import { CodeOTP } from '../auth/register/steps/code-otp/code-otp';
 import { VerifyApi } from '../../shared/services/verify/verify-sms.service';
+import { Image } from '../../shared/components/UI/input/image/image';
+import { KycApi } from '../../shared/services/verify/kyc.service';
+import { KycIdType } from '../../shared/models/kyc-image';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [
@@ -29,6 +33,7 @@ import { VerifyApi } from '../../shared/services/verify/verify-sms.service';
     NzInputModule,
     NzSelectModule,
     CodeOTP,
+    Image,
   ],
   selector: 'app-kyc-verification',
   styleUrl: './kyc-verification.css',
@@ -38,6 +43,7 @@ export class KycVerification {
   readonly profileApi = inject(ProfileApi);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly verifyApi = inject(VerifyApi);
+  private readonly kycApi = inject(KycApi);
   private readonly profilePatched = signal(false);
   readonly submitted = signal(false);
   readonly modalOpen = signal(false);
@@ -54,6 +60,8 @@ export class KycVerification {
   readonly sendOtpOnConfirm = signal(false);
   readonly phoneCodes = PHONE_CODES;
   readonly otp = this.fb.control('', [Validators.required, Validators.pattern(/^\d{6}$/)]);
+  readonly idFile = signal<File | null>(null);
+  readonly idType = signal<KycIdType>('National ID card');
 
   readonly profile = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
@@ -120,7 +128,7 @@ export class KycVerification {
       control.markAsDirty();
       control.updateValueAndValidity({ onlySelf: true });
     });
-    if (this.profile.invalid) return;
+    if (this.profile.invalid || !this.idFile()) return;
     const value = this.profile.getRawValue();
     const request: ProfileUpdateRequest = {
       member: {
@@ -218,22 +226,47 @@ export class KycVerification {
         optional: 'KYC',
       })
       .subscribe({
-        next: (response) => {
-          this.otpSubmitting.set(false);
-          this.otpModalOpen.set(false);
-          this.sendOtpOnConfirm.set(false);
-          this.showModal(
-            'success',
-            'OTP verified',
-            response.message || 'Your phone number has been verified.',
-          );
-        },
+        next: () => this.uploadKycImage(),
         error: (error: { message?: string; error?: string | { message?: string } }) => {
           this.otpSubmitting.set(false);
           this.otpError.set(
             typeof error.error === 'string'
               ? error.error
               : error.error?.message || error.message || 'Invalid OTP.',
+          );
+        },
+      });
+  }
+
+  private uploadKycImage(): void {
+    const file = this.idFile();
+    if (!file) {
+      this.otpSubmitting.set(false);
+      this.otpError.set('Identity document image is required. Please close this dialog and select a file.');
+      return;
+    }
+
+    this.otpModalOpen.set(false);
+    this.showModal('loading', 'Uploading document', 'OTP verified. Please wait while we upload your identity document.');
+    this.kycApi
+      .upload(file, this.idType())
+      .pipe(finalize(() => this.otpSubmitting.set(false)))
+      .subscribe({
+        next: () => {
+          this.sendOtpOnConfirm.set(false);
+          this.kycApi.load();
+          this.showModal(
+            'success',
+            'KYC submitted',
+            'Your OTP was verified and identity document was uploaded successfully.',
+          );
+        },
+        error: (error: { message?: string; error?: string | { message?: string } }) => {
+          const detail = typeof error.error === 'string' ? error.error : error.error?.message;
+          this.showModal(
+            'error',
+            'Unable to upload document',
+            detail || error.message || 'Please try again.',
           );
         },
       });

@@ -1,0 +1,22 @@
+<div class="text-gray-500">
+  <ul class="list-disc text-sm px-5">
+    <li>Clearly readable in all 4 corners of the document, both front and back(optional)</li>
+    <li>Documents must be submitted both front and back(optional)</li>
+    <li>The accepted file formats are JPEG, PNG</li>
+    <li>The maximum file size that can be uploaded is 5MB</li>
+  </ul>
+  <div class="md:grid grid-cols-2 place-items-center bg-gray-50 rounded-2xl p-5">
+    <div>
+      <p class="font-bold">Sample ID card photo</p>
+      <p>** Sign a certificate on the paper and write the message: **</p>
+      <p>“ Used to open a trading account with Guze Markets only ”</p>
+    </div>
+    <div>
+      @if (isPassport()) {
+        <img src="/images/cards/passport.png" alt="passport" />
+      } @else {
+        <img src="/images/cards/idcard.png" alt="idcard" />
+      }
+    </div>
+  </div>
+</div>

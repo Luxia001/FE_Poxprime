@@ -1,0 +1,50 @@
+<section class="flex flex-col gap-4 py-5">
+  <div>
+    <label class="mb-1 block text-sm font-medium text-slate-700" for="idType">Document type</label>
+    <nz-select id="idType" class="w-full" [ngModel]="idType()" (ngModelChange)="idType.set($event)">
+      @for (type of idTypes; track type) {
+        <nz-option [nzValue]="type" [nzLabel]="type" />
+      }
+    </nz-select>
+  </div>
+
+  <input
+    #fileInput
+    type="file"
+    class="hidden"
+    accept="image/jpeg,image/png"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (previewUrl(); as url) {
+    <div class="relative w-fit">
+      <img [src]="url" alt="ID card preview" class="max-h-64 rounded-xl border border-slate-200" />
+      <button
+        type="button"
+        class="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-white/90 shadow"
+        aria-label="Remove file"
+        (click)="removeFile(fileInput)"
+      >
+        <nz-icon nzType="close" />
+      </button>
+    </div>
+  } @else {
+    <button
+      type="button"
+      class="flex h-40 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 transition hover:border-blue-500 hover:text-blue-600"
+      (click)="fileInput.click()"
+    >
+      <nz-icon nzType="upload" class="text-2xl" />
+      <span class="text-sm">Click to select ID card image</span>
+      <span class="text-xs text-slate-400">JPG or PNG, up to 5 MB</span>
+    </button>
+  }
+
+  @if (error()) {
+    <p class="m-0 text-sm text-red-500" role="alert">{{ error() }}</p>
+  }
+  @if (submitted() && !file()) {
+    <p class="m-0 text-sm text-red-500" role="alert">Please select an identity document image.</p>
+  }
+  <app-card-verify [docType]="idType()" />
+</section>
