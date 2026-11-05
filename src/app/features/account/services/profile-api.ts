@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { catchError, finalize, map, Observable, throwError } from 'rxjs';
+import { catchError, finalize, map, Observable, tap, throwError } from 'rxjs';
 import { ProfileData, ProfileErrorResponse, ProfileResponse } from '../models/profile-response';
 import {
   ProfileUpdateRequest,
@@ -9,6 +9,7 @@ import {
   ProfileUpdateResponse,
   ProfileUpdateSuccessResponse,
 } from '../models/profile-request.model';
+import { ProfileImageData, ProfileImageResponse } from '../../../shared/models/profile.model';
 @Injectable({ providedIn: 'root' })
 export class ProfileApi {
   private readonly http = inject(HttpClient);
@@ -106,6 +107,28 @@ export class ProfileApi {
                 code: response.status,
               };
         return throwError(() => error);
+      }),
+    );
+  }
+
+  uploadImageProfile(file: File): Observable<ProfileImageData> {
+    const body = new FormData();
+    body.append('profileImage', file);
+
+    return this.http.post<ProfileImageResponse>(this.endpoint + '/image', body).pipe(
+      map((res) => {
+        if (!res.result) throw res;
+        return res.data;
+      }),
+      tap((data) => {
+        // อัปเดตรูปใน state ทันที ไม่ต้องรอโหลดโปรไฟล์ใหม่
+        const current = this.profileState();
+        if (current) {
+          this.profileState.set({
+            ...current,
+            member: { ...current.member, m_image_url: data.imageUrl },
+          });
+        }
       }),
     );
   }

@@ -26,7 +26,11 @@
     @if (!isCollapsed()) {
       <div class="bg-white p-4 text-slate-800">
         <div class="flex items-center gap-3">
-          <nz-avatar [nzSize]="48" nzIcon="user" [nzSrc]="profileDisplay()?.imageUrl || ''" />
+          <img
+            [src]="profileDisplay()?.imageUrl || ''"
+            alt="user"
+            class="w-12 h-12 rounded-full ratio-1x1 object-cover"
+          />
           <div class="min-w-0">
             @if (profileApi.loading()) {
               <p class="text-sm text-slate-400">Loading profile...</p>

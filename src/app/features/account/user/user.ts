@@ -22,6 +22,7 @@ export class User {
   readonly activeTab = signal(0);
   readonly kycApi = inject(KycApi);
   readonly profileApi = inject(ProfileApi);
+
   readonly profile = computed(() => {
     const response = this.profileApi.profile();
     const member = response?.member;
