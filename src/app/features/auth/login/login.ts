@@ -44,7 +44,12 @@ export class Login {
       next: (response) => {
         this.authStorage.save(response.data);
         this.loading.set(false);
-        void this.router.navigateByUrl('/account/user');
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        void this.router.navigateByUrl(
+          returnUrl?.startsWith('/') && !returnUrl.startsWith('//')
+            ? returnUrl
+            : '/general/dashboard',
+        );
       },
       error: (error: LoginErrorResponse) => {
         this.loading.set(false);

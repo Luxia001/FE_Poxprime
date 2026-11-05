@@ -6,12 +6,11 @@ import { Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { finalize } from 'rxjs';
-import { NzAvatarComponent } from 'ng-zorro-antd/avatar';
 
 const MAX_SIZE = 2 * 1024 * 1024; // 2 MB (ปรับตาม backend)
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 @Component({
-  imports: [NzIconModule, NzButtonModule, NzAvatarComponent],
+  imports: [NzIconModule, NzButtonModule],
   selector: 'app-profile',
   styleUrl: './profile.css',
   templateUrl: './profile.html',

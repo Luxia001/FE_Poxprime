@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
 import { Graph } from '../../../shared/components/UI/cards/graph/graph';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { Session } from '../../../shared/components/pages/session/session';
 
 @Component({
-  imports: [BarHead, Graph],
+  imports: [BarHead, Graph, Session],
   selector: 'app-dashboard',
   styleUrl: './dashboard.css',
   templateUrl: './dashboard.html',

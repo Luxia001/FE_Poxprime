@@ -13,7 +13,7 @@ describe('Login', () => {
     await TestBed.configureTestingModule({
       imports: [Login],
       providers: [
-        provideRouter([{ path: 'account/user', component: Login }]),
+        provideRouter([{ path: 'general/dashboard', component: Login }]),
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
