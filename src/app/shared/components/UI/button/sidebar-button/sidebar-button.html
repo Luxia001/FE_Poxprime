@@ -1,15 +1,35 @@
-<a
-  nz-tooltip
-  nzTooltipPlacement="right"
-  [nzTooltipTitle]="isCollapsed() ? title() : ''"
-  [routerLink]="routeLink()"
-  routerLinkActive="bg-blue-500! text-blue-600!"
-  class="flex w-full items-center gap-3 rounded-xl p-2.5 text-sm text-slate-600! transition hover:bg-slate-100!"
-  [class.justify-center]="isCollapsed()"
-  (click)="navigated.emit()"
->
-  <nz-icon [nzType]="iconType()" />
-  @if (!isCollapsed()) {
-    <span class="truncate">{{ title() }}</span>
-  }
-</a>
+@if (routeLink(); as route) {
+  <a
+    nz-tooltip
+    nzTooltipPlacement="right"
+    [nzTooltipTitle]="isCollapsed() ? title() : ''"
+    [routerLink]="route"
+    routerLinkActive="sidebar-link-active"
+    [routerLinkActiveOptions]="{ exact: false }"
+    #routeActive="routerLinkActive"
+    [attr.aria-current]="routeActive.isActive ? 'page' : null"
+    class="sidebar-link flex w-full items-center gap-3 rounded-xl p-2.5 text-sm transition"
+    [class.justify-center]="isCollapsed()"
+    (click)="navigated.emit()"
+  >
+    <nz-icon [nzType]="iconType()" />
+    @if (!isCollapsed()) {
+      <span class="truncate font-medium">{{ title() }}</span>
+    }
+  </a>
+} @else {
+  <button
+    type="button"
+    disabled
+    nz-tooltip
+    nzTooltipPlacement="right"
+    [nzTooltipTitle]="isCollapsed() ? title() : ''"
+    class="flex w-full cursor-not-allowed items-center gap-3 rounded-xl p-2.5 text-sm text-slate-400 opacity-70"
+    [class.justify-center]="isCollapsed()"
+  >
+    <nz-icon [nzType]="iconType()" />
+    @if (!isCollapsed()) {
+      <span class="truncate">{{ title() }}</span>
+    }
+  </button>
+}

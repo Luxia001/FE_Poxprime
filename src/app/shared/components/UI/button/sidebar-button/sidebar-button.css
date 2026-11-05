@@ -1,0 +1,14 @@
+.sidebar-link {
+  color: #475569;
+}
+
+.sidebar-link:hover {
+  background: #f1f5f9;
+  color: #1d4ed8;
+}
+
+.sidebar-link-active,
+.sidebar-link-active:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}

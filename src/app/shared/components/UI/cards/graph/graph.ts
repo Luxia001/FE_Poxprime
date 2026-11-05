@@ -19,7 +19,6 @@ Chart.register(...registerables);
 export class Graph implements AfterViewInit {
   @ViewChild('chartCanvas', { static: true }) private chartCanvas!: ElementRef<HTMLCanvasElement>;
   readonly title = input('Chart');
-  readonly subtitle = input('Last 7 days');
   readonly value = input('');
   readonly change = input('');
   readonly changePositive = input(true);
