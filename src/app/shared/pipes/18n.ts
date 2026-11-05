@@ -1,4 +1,5 @@
 const en = {
+  header: 'หัวข้อ',
   login: 'Log in',
   signup: 'Sign up',
   language: 'Change language',
@@ -36,7 +37,7 @@ const en = {
   otpCode: 'OTP code',
   otpHint: 'Enter your 6-digit OTP code.',
   otpError: 'Enter a 6-digit OTP code.',
-  title: 'User Account',
+  userAccount: 'User Account',
   deposit: 'Deposit',
   userInformation: 'User Information',
   bankAccount: 'Bank Account',
@@ -93,6 +94,7 @@ export type Translation = {
 };
 
 const th: Translation = {
+  header: 'หัวข้อ',
   login: 'เข้าสู่ระบบ',
   signup: 'สมัครสมาชิก',
   language: 'เปลี่ยนภาษา',
@@ -130,7 +132,7 @@ const th: Translation = {
   otpCode: 'รหัส OTP',
   otpHint: 'กรอกรหัส OTP จำนวน 6 หลัก',
   otpError: 'กรุณากรอกรหัส OTP ให้ครบ 6 หลัก',
-  title: 'บัญชีผู้ใช้',
+  userAccount: 'บัญชีผู้ใช้',
   deposit: 'ฝากเงิน',
   userInformation: 'ข้อมูลผู้ใช้',
   bankAccount: 'บัญชีธนาคาร',

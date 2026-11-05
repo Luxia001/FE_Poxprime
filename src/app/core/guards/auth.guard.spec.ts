@@ -18,7 +18,7 @@ describe('authGuard', () => {
 
   it('should redirect unauthenticated users to login with a return URL', () => {
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({} as never, { url: '/main/user' } as never),
+      authGuard({} as never, { url: '/account/user' } as never),
     );
     expect(router.serializeUrl(result as ReturnType<Router['createUrlTree']>)).toBe(
       '/login?returnUrl=%2Fmain%2Fuser',
@@ -28,7 +28,7 @@ describe('authGuard', () => {
   it('should allow users when all authentication values exist', () => {
     storage.save({ accessToken: 'access', refreshToken: 'refresh', sessionUid: 'session' });
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({} as never, { url: '/main/user' } as never),
+      authGuard({} as never, { url: '/account/user' } as never),
     );
     expect(result).toBe(true);
   });

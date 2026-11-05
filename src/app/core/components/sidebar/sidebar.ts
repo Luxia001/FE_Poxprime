@@ -49,7 +49,7 @@ export class Sidebar {
     {
       header: 'General',
       menu: [
-        { title: 'Dashboard', icon: 'appstore', link: null },
+        { title: 'Dashboard', icon: 'appstore', link: '/general/dashboard' },
         { title: 'MT5 & Wallet', icon: 'wallet', link: null },
       ],
     },
@@ -75,7 +75,7 @@ export class Sidebar {
       header: 'Account',
       menu: [
         { title: 'Notification Center', icon: 'bell', link: null },
-        { title: 'Profile', icon: 'user', link: '/main/user' },
+        { title: 'Profile', icon: 'user', link: '/account/user' },
         { title: 'Account Security', icon: 'safety-certificate', link: '/main/security' },
         { title: 'Download MT5', icon: 'cloud-download', link: null },
       ],

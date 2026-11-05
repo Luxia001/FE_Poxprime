@@ -44,8 +44,7 @@ export class Login {
       next: (response) => {
         this.authStorage.save(response.data);
         this.loading.set(false);
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        void this.router.navigateByUrl(returnUrl?.startsWith('/main') ? returnUrl : '/main/user');
+        void this.router.navigateByUrl('/account/user');
       },
       error: (error: LoginErrorResponse) => {
         this.loading.set(false);

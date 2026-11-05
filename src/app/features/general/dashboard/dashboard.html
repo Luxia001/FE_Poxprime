@@ -1,0 +1,25 @@
+<section class="grid gap-6">
+  <app-bar-head header="Dashboard" />
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <app-graph
+      title="Total balance"
+      value="$9,680.00"
+      change="+8.4%"
+      [configuration]="balanceChart"
+    />
+    <app-graph title="Net profit" value="$2,270.00" change="+12.1%" [configuration]="profitChart" />
+    <app-graph
+      title="Portfolio allocation"
+      value="$9,680.00"
+      subtitle="Current holdings"
+      [configuration]="allocationChart"
+    />
+    <app-graph
+      title="Executed trades"
+      value="112"
+      change="-2.3%"
+      [changePositive]="false"
+      [configuration]="tradesChart"
+    />
+  </div>
+</section>

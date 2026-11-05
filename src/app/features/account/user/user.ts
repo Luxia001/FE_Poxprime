@@ -1,17 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { LanguageService } from '../../../core/services/language';
 import { Verify } from '../../../shared/components/UI/cards/verify/verify';
-import { KycResponse } from '../models/kyc-response';
 import { ProfileApi } from '../services/profile-api';
 import { Router } from '@angular/router';
-import { AuthStorageService } from '../../../core/services/auth-storage';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Profile } from '../../../shared/components/pages/profile/profile';
 import { KycApi } from '../../../shared/services/verify/kyc.service';
+import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
 
 @Component({
-  imports: [Verify, NzIconModule, NzButtonModule, Profile],
+  imports: [Verify, NzIconModule, NzButtonModule, Profile, BarHead],
   selector: 'app-user',
   styleUrl: './user.css',
   templateUrl: './user.html',
@@ -21,7 +20,6 @@ export class User {
   readonly locale = inject(LanguageService);
   readonly text = this.locale.text;
   readonly activeTab = signal(0);
-  private readonly authStorage = inject(AuthStorageService);
   readonly kycApi = inject(KycApi);
   readonly profileApi = inject(ProfileApi);
   readonly profile = computed(() => {

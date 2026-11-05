@@ -11,12 +11,6 @@
       <p>** Sign a certificate on the paper and write the message: **</p>
       <p>“ Used to open a trading account with Guze Markets only ”</p>
     </div>
-    <div>
-      @if (isPassport()) {
-        <img src="/images/cards/passport.png" alt="passport" />
-      } @else {
-        <img src="/images/cards/idcard.png" alt="idcard" />
-      }
-    </div>
+    <img [src]="sample().src" [alt]="sample().alt" />
   </div>
 </div>

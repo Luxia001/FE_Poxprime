@@ -12,7 +12,11 @@ describe('Login', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Login],
-      providers: [provideRouter([{ path: 'main/user', component: Login }]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideRouter([{ path: 'account/user', component: Login }]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
@@ -32,7 +36,9 @@ describe('Login', () => {
   });
 
   it('should validate empty credentials and mask the password by default', async () => {
-    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    fixture.nativeElement
+      .querySelector('form')
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     await fixture.whenStable();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('.field-error').length).toBe(2);
@@ -44,11 +50,18 @@ describe('Login', () => {
   });
 
   it('should store tokens and navigate after a successful login', () => {
-    component.validateForm.setValue({ Email: 'john@example.com', password: 'Password123', remember: true });
+    component.validateForm.setValue({
+      Email: 'john@example.com',
+      password: 'Password123',
+      remember: true,
+    });
     component.submitForm();
 
     const request = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login');
-    expect(request.request.body).toEqual({ usernameOrEmail: 'john@example.com', password: 'Password123' });
+    expect(request.request.body).toEqual({
+      usernameOrEmail: 'john@example.com',
+      password: 'Password123',
+    });
     request.flush({
       result: true,
       message: 'Login successful',
@@ -69,12 +82,18 @@ describe('Login', () => {
   });
 
   it('should show the API error without storing credentials', () => {
-    component.validateForm.setValue({ Email: 'john@example.com', password: 'wrong-password', remember: true });
+    component.validateForm.setValue({
+      Email: 'john@example.com',
+      password: 'wrong-password',
+      remember: true,
+    });
     component.submitForm();
-    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login').flush(
-      { result: false, message: 'Invalid credentials', code: 401 },
-      { status: 401, statusText: 'Unauthorized' },
-    );
+    http
+      .expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login')
+      .flush(
+        { result: false, message: 'Invalid credentials', code: 401 },
+        { status: 401, statusText: 'Unauthorized' },
+      );
     expect(component.errorMessage()).toBe('Invalid credentials');
     expect(localStorage.getItem('accessToken')).toBeNull();
   });

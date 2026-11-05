@@ -34,7 +34,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'main',
+    path: 'account',
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
@@ -46,6 +46,18 @@ export const routes: Routes = [
       {
         path: 'security',
         component: AccountSecurity,
+      },
+    ],
+  },
+  {
+    path: 'general',
+    component: MainLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/general/dashboard/dashboard').then((component) => component.Dashboard),
       },
     ],
   },
