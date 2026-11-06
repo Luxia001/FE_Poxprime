@@ -1,0 +1,72 @@
+<section class="py-6">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h3 class="m-0 text-lg font-bold text-slate-900">Bank accounts</h3>
+      <p class="mb-0 mt-1 text-sm text-slate-500">Manage accounts used for deposits and withdrawals.</p>
+    </div>
+    <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{{ api.accounts().length }} accounts</span>
+  </div>
+
+  @if (api.accounts().length) {
+    <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      @for (account of api.accounts(); track account.id) {
+        <article class="rounded-2xl border border-slate-200 bg-linear-to-br from-white to-slate-50 p-5 shadow-sm">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex min-w-0 items-center gap-3">
+              <div class="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm">
+                @if (account.bank_image) { <img [src]="account.bank_image" [alt]="account.bank_name" class="size-9 object-contain" /> } @else { <span class="text-sm font-bold text-blue-700">{{ account.bank_code }}</span> }
+              </div>
+              <div class="min-w-0"><p class="m-0 truncate font-semibold text-slate-900">{{ account.bank_name }}</p><p class="m-0 text-xs text-slate-500">{{ account.bank_branch || 'No branch specified' }}</p></div>
+            </div>
+            <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold" [class.bg-emerald-50]="account.bank_status === 1" [class.text-emerald-700]="account.bank_status === 1" [class.bg-amber-50]="account.bank_status !== 1" [class.text-amber-700]="account.bank_status !== 1">{{ account.bank_status_text || (account.bank_status === 1 ? 'Verified' : 'Pending') }}</span>
+          </div>
+          <p class="mb-0 mt-6 font-mono text-lg font-semibold tracking-wider text-slate-800">{{ maskAccountNumber(account.bank_account_number) }}</p>
+          <p class="mb-0 mt-2 text-sm text-slate-500">{{ account.bank_account_name }}</p>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+      <p class="m-0 font-semibold text-slate-800">{{ text().noBank }}</p>
+      <p class="mb-0 mt-1 text-sm text-slate-500">{{ text().bankHint }}</p>
+    </div>
+  }
+
+  <form nz-form nzLayout="vertical" [formGroup]="form" (ngSubmit)="submit()" class="bank-form mt-6 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6" novalidate>
+    <h4 class="m-0 text-base font-bold text-slate-900">{{ text().addBank }}</h4>
+    <div class="mt-5 grid gap-x-6 gap-y-1 md:grid-cols-2">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="bankCode">Bank</nz-form-label>
+        <nz-form-control nzErrorTip="Please select a bank.">
+          <nz-select id="bankCode" formControlName="bankCode" nzShowSearch nzPlaceHolder="Select bank" class="w-full">
+            @for (bank of banks; track bank.code) { <nz-option [nzValue]="bank.code" [nzLabel]="bank.nameTh + ' (' + bank.nameEn + ')'" /> }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="branch">Branch</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the branch."><input nz-input id="branch" formControlName="branch" placeholder="Branch name" /></nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="accountName">Account name</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the account name."><input nz-input id="accountName" formControlName="accountName" placeholder="Name shown on bank account" /></nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="accountNumber">Account number</nz-form-label>
+        <nz-form-control nzErrorTip="Enter 10–15 digits.">
+          <input nz-input id="accountNumber" formControlName="accountNumber" inputmode="numeric" maxlength="15" autocomplete="off" placeholder="Account number" (input)="sanitizeAccountNumber($event)" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    @if (error()) { <p class="mb-0 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">{{ error() }}</p> }
+    @if (success()) { <p class="mb-0 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700" role="status">{{ success() }}</p> }
+
+    <div class="mt-5 flex justify-end">
+      <button nz-button nzType="primary" type="submit" [nzLoading]="saving()" [disabled]="saving()" class="h-11! w-full rounded-lg! bg-blue-700! px-6! text-white! sm:w-auto">{{ text().addBank }}</button>
+    </div>
+  </form>
+</section>

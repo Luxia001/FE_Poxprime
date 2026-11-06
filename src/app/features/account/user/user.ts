@@ -9,9 +9,10 @@ import { Profile } from '../../../shared/components/pages/profile/profile';
 import { KycApi } from '../../../shared/services/verify/kyc.service';
 import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
 import { TotpApi } from '../../../shared/services/verify/google.service';
+import { BookBank } from '../book-bank/book-bank';
 
 @Component({
-  imports: [Verify, NzIconModule, NzButtonModule, Profile, BarHead],
+  imports: [Verify, NzIconModule, NzButtonModule, Profile, BarHead, BookBank],
   selector: 'app-user',
   styleUrl: './user.css',
   templateUrl: './user.html',

@@ -1,6 +1,7 @@
 const en = {
   header: 'หัวข้อ',
-  downloadMT5:'Download MT5',
+  accountSecurity: 'Account Security',
+  downloadMT5: 'Download MT5',
   login: 'Log in',
   signup: 'Sign up',
   language: 'Change language',
@@ -96,7 +97,8 @@ export type Translation = {
 
 const th: Translation = {
   header: 'หัวข้อ',
-  downloadMT5:'ติดตั้ง MT5',
+  downloadMT5: 'ติดตั้ง MT5',
+  accountSecurity: 'ความปลอดภัยบัญชื',
   login: 'เข้าสู่ระบบ',
   signup: 'สมัครสมาชิก',
   language: 'เปลี่ยนภาษา',
