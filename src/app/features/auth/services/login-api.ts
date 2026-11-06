@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
-  LoginErrorResponse,
   LoginRequest,
   LoginResponse,
   LoginSuccessResponse,
@@ -11,6 +10,7 @@ import {
   TwoFactorVerifyResponse,
   TwoFactorVerifySuccessResponse,
 } from '../models/login.model';
+import { errorResponse } from '../../../core/models/index.model';
 
 @Injectable({ providedIn: 'root' })
 export class LoginApiService {
@@ -24,7 +24,7 @@ export class LoginApiService {
         if (!response.result) throw response;
         return response;
       }),
-      catchError((response: HttpErrorResponse | LoginErrorResponse) =>
+      catchError((response: HttpErrorResponse | errorResponse) =>
         throwError(() => this.normalizeError(response)),
       ),
     );
@@ -36,13 +36,13 @@ export class LoginApiService {
         if (!response.result) throw response;
         return response;
       }),
-      catchError((response: HttpErrorResponse | LoginErrorResponse) =>
+      catchError((response: HttpErrorResponse | errorResponse) =>
         throwError(() => this.normalizeError(response)),
       ),
     );
   }
 
-  private normalizeError(response: HttpErrorResponse | LoginErrorResponse): LoginErrorResponse {
+  private normalizeError(response: HttpErrorResponse | errorResponse): errorResponse {
     if (!(response instanceof HttpErrorResponse)) return response;
     const body = response.error;
     if (body && typeof body === 'object' && body.result === false) {

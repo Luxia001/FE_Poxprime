@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from '../../core/models/index.model';
+
 export interface KycRecord {
   id: number;
   member_id: number;
@@ -16,18 +18,8 @@ export interface KycRecord {
   updatedAt: string;
 }
 
-export interface KycSuccessResponse {
-  result: true;
-  message: string;
+export interface KycSuccessResponse extends successResponse {
   data: KycRecord;
-  code: number;
 }
 
-export interface KycErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type KycResponse = KycSuccessResponse | KycErrorResponse;
+export type KycResponse = KycSuccessResponse | errorResponse;

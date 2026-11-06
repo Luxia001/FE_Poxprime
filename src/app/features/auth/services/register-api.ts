@@ -1,13 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { RegisterRequest } from '../models/register-request';
-import {
-  RegisterErrorResponse,
-  RegisterResponse,
-  RegisterSuccessResponse,
-} from '../models/register-response';
+import { RegisterResponse, RegisterSuccessResponse } from '../models/register-response';
 import { environment } from '../../../../environments/environment';
+import { errorResponse } from '../../../core/models/index.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterApiService {
@@ -24,9 +21,7 @@ export class RegisterApiService {
     );
   }
 
-  private normalizeError(
-    response: HttpErrorResponse | RegisterErrorResponse,
-  ): RegisterErrorResponse {
+  private normalizeError(response: HttpErrorResponse | errorResponse): errorResponse {
     if (!(response instanceof HttpErrorResponse)) return response;
     const body = response.error;
     if (body && typeof body === 'object' && body.result === false) {

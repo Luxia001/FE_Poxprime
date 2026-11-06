@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from './index.model';
+
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
@@ -9,17 +11,8 @@ export interface RefreshTokenData {
   sessionUid?: string;
 }
 
-export interface RefreshTokenSuccessResponse {
-  result: true;
-  message: string;
+export interface RefreshTokenSuccessResponse extends successResponse {
   data: RefreshTokenData;
-  code: number;
 }
 
-export interface RefreshTokenErrorResponse {
-  result: false;
-  message: string;
-  code: number;
-}
-
-export type RefreshTokenResponse = RefreshTokenSuccessResponse | RefreshTokenErrorResponse;
+export type RefreshTokenResponse = RefreshTokenSuccessResponse | errorResponse;

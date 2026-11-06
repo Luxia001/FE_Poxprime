@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from '../../../core/models/index.model';
+
 export interface RegisteredMember {
   id: number;
   username: string;
@@ -14,24 +16,8 @@ export interface RegisteredMember {
   updatedAt: string;
 }
 
-export interface RegisterSuccessResponse {
-  result: true;
-  message: string;
+export interface RegisterSuccessResponse extends successResponse {
   data: RegisteredMember;
-  code: number;
 }
 
-export interface RegisterApiErrorDetail {
-  code: string;
-  message: string;
-}
-
-export interface RegisterErrorResponse {
-  result: false;
-  message: string;
-  error?: RegisterApiErrorDetail;
-  errors?: string[];
-  code?: number;
-}
-
-export type RegisterResponse = RegisterSuccessResponse | RegisterErrorResponse;
+export type RegisterResponse = RegisterSuccessResponse | errorResponse;

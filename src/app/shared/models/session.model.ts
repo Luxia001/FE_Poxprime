@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from '../../core/models/index.model';
+
 export interface ActiveSession {
   session_uid: string;
   session_agent: string;
@@ -20,19 +22,9 @@ export interface Pagination {
   hasPrev: boolean;
 }
 
-export interface ActiveSessionsSuccessResponse {
-  result: true;
-  message: string;
+export interface ActiveSessionsSuccessResponse extends successResponse {
   data: ActiveSession[];
   pagination: Pagination;
-  code: number;
 }
 
-export interface ActiveSessionsErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type ActiveSessionsResponse = ActiveSessionsSuccessResponse | ActiveSessionsErrorResponse;
+export type ActiveSessionsResponse = ActiveSessionsSuccessResponse | errorResponse;

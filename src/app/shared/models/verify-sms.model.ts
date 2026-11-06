@@ -1,23 +1,15 @@
+import { errorResponse, successResponse } from '../../core/models/index.model';
+
 export interface SendSmsOtpData {
   memberRef: string;
   expiresAt: number;
 }
 
-export interface SendSmsOtpSuccessResponse {
-  result: true;
-  message: string;
+export interface SendSmsOtpSuccessResponse extends successResponse {
   data: SendSmsOtpData;
-  code: number;
 }
 
-export interface SendSmsOtpErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type SendSmsOtpResponse = SendSmsOtpSuccessResponse | SendSmsOtpErrorResponse;
+export type SendSmsOtpResponse = SendSmsOtpSuccessResponse | errorResponse;
 
 export interface SendSmsOtpRequest {
   phoneCode: string;
@@ -36,18 +28,8 @@ export interface VerifySmsOtpData {
   verified?: boolean;
 }
 
-export interface VerifySmsOtpSuccessResponse {
-  result: true;
-  message: string;
+export interface VerifySmsOtpSuccessResponse extends successResponse {
   data?: VerifySmsOtpData;
-  code: number;
 }
 
-export interface VerifySmsOtpErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type VerifySmsOtpResponse = VerifySmsOtpSuccessResponse | VerifySmsOtpErrorResponse;
+export type VerifySmsOtpResponse = VerifySmsOtpSuccessResponse | errorResponse;

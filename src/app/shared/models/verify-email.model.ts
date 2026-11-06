@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from '../../core/models/index.model';
+
 export interface VerificationMember {
   id: number;
   username: string;
@@ -21,19 +23,8 @@ export interface EmailVerificationData {
   sessionUid: string;
 }
 
-export interface EmailVerificationSuccessResponse {
-  result: true;
-  message: string;
+export interface EmailVerificationSuccessResponse extends successResponse {
   data: EmailVerificationData;
-  code: number;
 }
 
-export interface EmailVerificationErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type EmailVerificationResponse =
-  EmailVerificationSuccessResponse | EmailVerificationErrorResponse;
+export type EmailVerificationResponse = EmailVerificationSuccessResponse | errorResponse;

@@ -6,7 +6,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { LanguageService } from '../../../core/services/language';
 import { LoginApiService } from '../services/login-api';
 import { AuthStorageService } from '../../../core/services/auth-storage';
-import { LoginData, LoginErrorResponse } from '../models/login.model';
+import { LoginData } from '../models/login.model';
+import { errorResponse } from '../../../core/models/index.model';
+import { getErrorMessage } from '../../../core/utils/error-message';
 import { OtpModal } from '../../../shared/components/UI/modals/otp-modal/otp-modal';
 
 @Component({
@@ -37,7 +39,10 @@ export class Login {
     password: ['', Validators.required],
     remember: [true],
   });
-  readonly twoFactorCode = this.fb.control('', [Validators.required, Validators.pattern(/^\d{6}$/)]);
+  readonly twoFactorCode = this.fb.control('', [
+    Validators.required,
+    Validators.pattern(/^\d{6}$/),
+  ]);
 
   submitForm(): void {
     this.submitted.set(true);
@@ -60,9 +65,9 @@ export class Login {
         }
         this.completeLogin(response.data);
       },
-      error: (error: LoginErrorResponse) => {
+      error: (error: errorResponse) => {
         this.loading.set(false);
-        this.errorMessage.set(error.error || error.message || this.text().signInUnavailable);
+        this.errorMessage.set(getErrorMessage(error, this.text().signInUnavailable));
       },
     });
   }
@@ -75,21 +80,23 @@ export class Login {
 
     this.twoFactorSubmitting.set(true);
     this.twoFactorError.set('');
-    this.loginApi.verifyTwoFactor({
-      preAuthToken: this.preAuthToken(),
-      totpToken: this.twoFactorCode.getRawValue(),
-      rememberDevice: this.rememberDevice(),
-    }).subscribe({
-      next: (response) => {
-        this.twoFactorSubmitting.set(false);
-        this.twoFactorOpen.set(false);
-        this.completeLogin(response.data);
-      },
-      error: (error: LoginErrorResponse) => {
-        this.twoFactorSubmitting.set(false);
-        this.twoFactorError.set(error.error || error.message || 'Invalid authentication code.');
-      },
-    });
+    this.loginApi
+      .verifyTwoFactor({
+        preAuthToken: this.preAuthToken(),
+        totpToken: this.twoFactorCode.getRawValue(),
+        rememberDevice: this.rememberDevice(),
+      })
+      .subscribe({
+        next: (response) => {
+          this.twoFactorSubmitting.set(false);
+          this.twoFactorOpen.set(false);
+          this.completeLogin(response.data);
+        },
+        error: (error: errorResponse) => {
+          this.twoFactorSubmitting.set(false);
+          this.errorMessage.set(getErrorMessage(error, this.text().signInUnavailable));
+        },
+      });
   }
 
   closeTwoFactor(): void {
@@ -104,9 +111,7 @@ export class Login {
     this.authStorage.save(data);
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
     void this.router.navigateByUrl(
-      returnUrl?.startsWith('/') && !returnUrl.startsWith('//')
-        ? returnUrl
-        : '/general/dashboard',
+      returnUrl?.startsWith('/') && !returnUrl.startsWith('//') ? returnUrl : '/general/dashboard',
     );
   }
 }

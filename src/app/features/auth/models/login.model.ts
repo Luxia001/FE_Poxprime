@@ -1,3 +1,5 @@
+import { errorResponse, successResponse } from '../../../core/models/index.model';
+
 export interface LoginRequest {
   usernameOrEmail: string;
   password: string;
@@ -39,15 +41,7 @@ export interface LoginSuccessResponse {
   code: number;
 }
 
-export interface LoginErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  errors?: unknown[];
-  code: number;
-}
-
-export type LoginResponse = LoginSuccessResponse | LoginErrorResponse;
+export type LoginResponse = LoginSuccessResponse | errorResponse;
 
 export interface TwoFactorVerifyRequest {
   preAuthToken: string;
@@ -55,11 +49,8 @@ export interface TwoFactorVerifyRequest {
   rememberDevice: boolean;
 }
 
-export interface TwoFactorVerifySuccessResponse {
-  result: true;
-  message: string;
+export interface TwoFactorVerifySuccessResponse extends successResponse {
   data: LoginData;
-  code: number;
 }
 
-export type TwoFactorVerifyResponse = TwoFactorVerifySuccessResponse | LoginErrorResponse;
+export type TwoFactorVerifyResponse = TwoFactorVerifySuccessResponse | errorResponse;

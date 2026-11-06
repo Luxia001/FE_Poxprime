@@ -1,20 +1,12 @@
+import { errorResponse, successResponse } from '../../core/models/index.model';
+
 export interface ProfileImageData {
   imageUrl: string;
   thumbnailUrl: string;
 }
 
-export interface ProfileImageSuccessResponse {
-  result: true;
-  message: string;
+export interface ProfileImageSuccessResponse extends successResponse {
   data: ProfileImageData;
-  code: number;
 }
 
-export interface ProfileImageErrorResponse {
-  result: false;
-  message: string;
-  error?: string;
-  code: number;
-}
-
-export type ProfileImageResponse = ProfileImageSuccessResponse | ProfileImageErrorResponse;
+export type ProfileImageResponse = ProfileImageSuccessResponse | errorResponse;

@@ -17,8 +17,9 @@ import {
   StatusModal,
   StatusModalType,
 } from '../../../shared/components/UI/modals/status-modal/status-modal';
-import { RegisterErrorResponse } from '../models/register-response';
 import { RegisterRequest } from '../models/register-request';
+import { errorResponse } from '../../../core/models/index.model';
+import { getErrorMessage } from '../../../core/utils/error-message';
 
 @Component({
   imports: [
@@ -154,10 +155,13 @@ export class Register {
         this.submitting.set(false);
         this.showModal('success', 'Registration successful', response.message);
       },
-      error: (error: RegisterErrorResponse) => {
+      error: (error: errorResponse) => {
         this.submitting.set(false);
-        const message = error.error?.message ?? error.message;
-        this.showModal('error', 'Registration failed', message, error.errors ?? []);
+        this.showModal(
+          'error',
+          'Registration failed',
+          getErrorMessage(error, 'Registration failed'),
+        );
       },
     });
   }
