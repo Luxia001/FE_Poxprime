@@ -1,29 +1,21 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, ViewChild, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ProfileApi } from '../account/services/profile-api';
-import {
-  Gender,
-  ProfileUpdateErrorResponse,
-  ProfileUpdateRequest,
-} from '../account/models/profile-request.model';
 import {
   StatusModal,
   StatusModalType,
 } from '../../shared/components/UI/modals/status-modal/status-modal';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { PHONE_CODES } from '../../shared/pipes/phoneCode';
-import { CodeOTP } from '../auth/register/steps/code-otp/code-otp';
 import { VerifyApi } from '../../shared/services/verify/verify-sms.service';
 import { Image } from '../../shared/components/UI/input/image/image';
 import { KycApi } from '../../shared/services/verify/kyc.service';
 import { KycIdType } from '../../shared/models/kyc-image';
 import { finalize } from 'rxjs';
-import { maxBirthDate, minAge } from '../../shared/pipes/validate-age.validators';
 import { LanguageService } from '../../core/services/language';
+import { ProfileEdit } from '../../shared/components/pages/profile-edit/profile-edit';
+import { ProfileApi } from '../account/services/profile-api';
+import { ProfileUpdateErrorResponse, ProfileUpdateRequest } from '../account/models/profile-request.model';
+import { OtpModal } from '../../shared/components/UI/modals/otp-modal/otp-modal';
 
 @Component({
   imports: [
@@ -31,25 +23,22 @@ import { LanguageService } from '../../core/services/language';
     ReactiveFormsModule,
     StatusModal,
     NzButtonModule,
-    NzFormModule,
-    NzInputModule,
-    NzSelectModule,
-    CodeOTP,
+    OtpModal,
     Image,
+    ProfileEdit,
   ],
   selector: 'app-kyc-verification',
   styleUrl: './kyc-verification.css',
   templateUrl: './kyc-verification.html',
 })
 export class KycVerification {
+  @ViewChild(ProfileEdit) private profileForm?: ProfileEdit;
   readonly profileApi = inject(ProfileApi);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly verifyApi = inject(VerifyApi);
   private readonly kycApi = inject(KycApi);
   readonly locale = inject(LanguageService);
   readonly text = this.locale.text;
-  private readonly profilePatched = signal(false);
-  readonly maxBirthDate = maxBirthDate(18);
   readonly submitted = signal(false);
   readonly modalOpen = signal(false);
   readonly modalType = signal<StatusModalType>('loading');
@@ -63,103 +52,18 @@ export class KycVerification {
   readonly otpMemberRef = signal('');
   readonly otpExpiresAt = signal<number | null>(null);
   readonly sendOtpOnConfirm = signal(false);
-  readonly phoneCodes = PHONE_CODES;
   readonly otp = this.fb.control('', [Validators.required, Validators.pattern(/^\d{6}$/)]);
   readonly idFile = signal<File | null>(null);
   readonly idType = signal<KycIdType>('National ID card');
 
-  readonly profile = this.fb.group({
-    firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
-    lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
-    gender: this.fb.control<Gender | ''>('', Validators.required),
-    nationality: ['', Validators.required],
-    country: ['', Validators.required],
-    identity: ['', Validators.required],
-    birthDate: ['', [Validators.required, minAge(18)]],
-    phoneCode: ['+66', [Validators.required, Validators.pattern(/^\+\d{1,3}$/)]],
-    phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{5,14}$/)]],
-    addressNo: ['', Validators.required],
-    district: ['', Validators.required],
-    city: ['', Validators.required],
-    state: ['', Validators.required],
-    zipCode: ['', [Validators.required, Validators.pattern(/^\d{3,10}$/)]],
-  });
-  constructor() {
-    this.profileApi.loadProfile();
-
-    effect(() => {
-      const response = this.profileApi.profile();
-      if (!response) return;
-
-      const { member, address } = response;
-
-      this.profile.patchValue({
-        firstName: member.m_name ?? '',
-        lastName: member.m_lastname ?? '',
-        gender: member.m_gender ?? '',
-        nationality: member.m_nationality ?? '',
-        country: member.m_country ?? '',
-        identity: member.m_identity ?? '',
-        birthDate: member.m_birthdate ? member.m_birthdate.slice(0, 10) : '',
-        phoneCode: member.m_phone_code || '+66',
-        phoneNumber: this.toLocalPhone(member.m_phone, member.m_phone_code),
-        addressNo: address?.address_no ?? '',
-        district: address?.address_district ?? '',
-        city: address?.address_city ?? '',
-        state: address?.address_state ?? member.m_state ?? '',
-        zipCode: address?.address_zipcode ?? '',
-      });
-
-      this.profilePatched.set(true);
-    });
-  }
-
-  /** ตัดรหัสประเทศและอักขระที่ไม่ใช่ตัวเลขออก */
-  private toLocalPhone(phone: string | null, code: string | null): string {
-    if (!phone) return '';
-    const digitsCode = (code ?? '').replace(/\D/g, '');
-    let digits = phone.replace(/\D/g, '');
-    // ถ้าเบอร์ขึ้นต้นด้วยรหัสประเทศ (เช่น +660900000003) ให้ตัดออก
-    if (phone.startsWith('+') && digitsCode && digits.startsWith(digitsCode)) {
-      digits = digits.slice(digitsCode.length);
-    }
-    return digits;
-  }
-
   submitForm(): void {
     this.submitted.set(true);
-    Object.values(this.profile.controls).forEach((control) => {
-      control.markAsTouched();
-      control.markAsDirty();
-      control.updateValueAndValidity({ onlySelf: true });
-    });
-    if (this.profile.invalid || !this.idFile()) return;
-    const value = this.profile.getRawValue();
-    const request: ProfileUpdateRequest = {
-      member: {
-        m_name: value.firstName.trim(),
-        m_lastname: value.lastName.trim(),
-        m_phone: value.phoneCode + value.phoneNumber,
-        m_phone_code: value.phoneCode,
-        m_gender: value.gender as Gender,
-        m_nationality: value.nationality.trim() || null,
-        m_country: value.country.trim() || null,
-        m_identity: value.identity.trim() || null,
-        m_birthdate: value.birthDate || null,
-      },
-      address: {
-        address_no: value.addressNo.trim() || null,
-        address_district: value.district.trim() || null,
-        address_city: value.city.trim() || null,
-        address_state: value.state.trim() || null,
-        address_zipcode: value.zipCode.trim() || null,
-      },
-    };
-    this.showModal(
-      'loading',
-      'Saving profile',
-      'Please wait while we update your KYC information.',
-    );
+    if (!this.idFile()) return;
+    this.profileForm?.submitForm();
+  }
+
+  updateProfileForKyc(request: ProfileUpdateRequest): void {
+    this.showModal('loading', 'Saving profile', 'Please wait while we update your KYC information.');
     this.profileApi.updateProfile(request).subscribe({
       next: (response) => {
         this.profileApi.loadProfile(true);

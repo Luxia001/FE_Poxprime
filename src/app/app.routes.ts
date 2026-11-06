@@ -50,6 +50,13 @@ export const routes: Routes = [
       },
       { path: 'kyc-verification', component: KycVerification },
       {
+        path: 'edit-profile',
+        loadComponent: () =>
+          import('./features/account/edit-profile/edit-profile').then(
+            (component) => component.EditProfilePage,
+          ),
+      },
+      {
         path: 'google-verification',
         loadComponent: () =>
           import('./shared/components/pages/google-auth/google-auth').then(

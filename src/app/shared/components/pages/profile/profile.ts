@@ -41,6 +41,10 @@ export class Profile {
     void this.route.navigate(['/login']);
   }
 
+  openEditProfile(): void {
+    void this.route.navigate(['/account/edit-profile']);
+  }
+
   onSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];

@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.profile-form nz-form-item {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.profile-form nz-form-label {
+  display: block;
+  padding: 0 0 0.5rem;
+  line-height: 1.25rem;
+}
+
+.profile-form input[nz-input] {
+  min-height: 2.875rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+}
+
+:host ::ng-deep .profile-form .ant-form-item-label > label {
+  height: auto;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .profile-form .ant-select-selector {
+  min-height: 2.875rem;
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.5rem !important;
+  align-items: center;
+}
+
+:host ::ng-deep .profile-form .ant-select-selection-search-input {
+  height: 2.75rem !important;
+}
+
+:host ::ng-deep .profile-form .ant-form-item-label > label.ant-form-item-required::before {
+  margin-right: 0.25rem;
+  color: #dc2626;
+}
+
+:host ::ng-deep .profile-form .ant-form-item-has-error .ant-input,
+:host ::ng-deep .profile-form .ant-select-status-error .ant-select-selector {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgb(220 38 38 / 10%);
+}
+
+:host ::ng-deep .profile-form .ant-form-item-explain-error {
+  margin-top: 0.375rem;
+  color: #dc2626;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+@media (max-width: 639px) {
+  .profile-form nz-form-item {
+    margin-bottom: 1rem;
+  }
+
+  .profile-form input[nz-input],
+  :host ::ng-deep .profile-form .ant-select-selector {
+    min-height: 2.75rem;
+  }
+}

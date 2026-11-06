@@ -19,7 +19,7 @@ export interface LoginMember {
 }
 
 export interface LoginData {
-  require2FA: boolean;
+  require2FA: false;
   member: LoginMember;
   accessToken: string;
   refreshToken: string;
@@ -27,10 +27,15 @@ export interface LoginData {
   sessionUid: string;
 }
 
+export interface LoginTwoFactorData {
+  require2FA: true;
+  preAuthToken: string;
+}
+
 export interface LoginSuccessResponse {
   result: true;
   message: string;
-  data: LoginData;
+  data: LoginData | LoginTwoFactorData;
   code: number;
 }
 
@@ -43,3 +48,18 @@ export interface LoginErrorResponse {
 }
 
 export type LoginResponse = LoginSuccessResponse | LoginErrorResponse;
+
+export interface TwoFactorVerifyRequest {
+  preAuthToken: string;
+  totpToken: string;
+  rememberDevice: boolean;
+}
+
+export interface TwoFactorVerifySuccessResponse {
+  result: true;
+  message: string;
+  data: LoginData;
+  code: number;
+}
+
+export type TwoFactorVerifyResponse = TwoFactorVerifySuccessResponse | LoginErrorResponse;

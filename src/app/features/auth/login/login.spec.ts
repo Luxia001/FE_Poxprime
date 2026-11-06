@@ -97,4 +97,49 @@ describe('Login', () => {
     expect(component.errorMessage()).toBe('Invalid credentials');
     expect(localStorage.getItem('accessToken')).toBeNull();
   });
+
+  it('should verify 2FA before storing the authenticated session', () => {
+    component.validateForm.setValue({
+      Email: 'john@example.com',
+      password: 'Password123',
+      remember: true,
+    });
+    component.submitForm();
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/login').flush({
+      result: true,
+      message: 'Two-factor authentication required',
+      data: { require2FA: true, preAuthToken: 'pre-auth-token' },
+      code: 200,
+    });
+
+    expect(component.twoFactorOpen()).toBe(true);
+    expect(localStorage.getItem('accessToken')).toBeNull();
+    component.twoFactorCode.setValue('123456');
+    component.verifyTwoFactor();
+
+    const verify = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/auth/2fa/verify');
+    expect(verify.request.body).toEqual({
+      preAuthToken: 'pre-auth-token',
+      totpToken: '123456',
+      rememberDevice: true,
+    });
+    verify.flush({
+      result: true,
+      message: 'Login successful',
+      data: {
+        require2FA: false,
+        member: {},
+        accessToken: 'access-2fa',
+        refreshToken: 'refresh-2fa',
+        expiresIn: 900000,
+        sessionUid: 'session-2fa',
+      },
+      code: 200,
+    });
+
+    expect(component.twoFactorOpen()).toBe(false);
+    expect(localStorage.getItem('accessToken')).toBe('access-2fa');
+    expect(localStorage.getItem('refreshToken')).toBe('refresh-2fa');
+    expect(localStorage.getItem('sessionUid')).toBe('session-2fa');
+  });
 });

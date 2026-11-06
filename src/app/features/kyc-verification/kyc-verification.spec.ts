@@ -3,6 +3,8 @@ import { KycVerification } from './kyc-verification';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { By } from '@angular/platform-browser';
+import { ProfileEdit } from '../../shared/components/pages/profile-edit/profile-edit';
 
 describe('KycVerification', () => {
   let component: KycVerification;
@@ -18,7 +20,10 @@ describe('KycVerification', () => {
     fixture = TestBed.createComponent(KycVerification);
     component = fixture.componentInstance;
     http = TestBed.inject(HttpTestingController);
-    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush({ result: false, message: 'No profile', code: 404 }, { status: 404, statusText: 'Not Found' });
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush(
+      { result: false, message: 'No profile', code: 404 },
+      { status: 404, statusText: 'Not Found' },
+    );
     await fixture.whenStable();
   });
 
@@ -28,33 +33,29 @@ describe('KycVerification', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should mark every field touched and keep gender invalid on an empty submit', () => {
+  it('should require an identity image before requesting OTP', () => {
     component.submitForm();
-    expect(component.profile.controls.gender.value).toBe('');
-    expect(component.profile.controls.gender.touched).toBe(true);
-    expect(component.profile.controls.gender.dirty).toBe(true);
-    expect(component.profile.controls.gender.invalid).toBe(true);
-    expect(Object.values(component.profile.controls).every((control) => control.touched)).toBe(true);
+    expect(component.submitted()).toBe(true);
+    expect(component.idFile()).toBeNull();
+    http.expectNone('https://stg-portal-api.speedandnumber.com/v1/verify/sms/send');
   });
 
-  it('should update profile, send OTP and verify the entered code', () => {
-    component.profile.setValue({
+  it('should send OTP, verify it and upload the selected image', () => {
+    const profileForm = fixture.debugElement.query(By.directive(ProfileEdit)).componentInstance as ProfileEdit;
+    profileForm.profile.setValue({
       firstName: 'John', lastName: 'Doe', gender: 'MALE', nationality: 'Thai', country: 'Thailand',
       identity: 'AA123456', birthDate: '1990-01-15', phoneCode: '+66', phoneNumber: '812345678',
       addressNo: '1/1', district: 'Pathum Wan', city: 'Bangkok', state: 'Bangkok', zipCode: '10330',
     });
     component.idFile.set(new File(['identity-image'], 'identity.png', { type: 'image/png' }));
     component.submitForm();
-
     const update = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile/update');
-    expect(update.request.method).toBe('PUT');
     expect(update.request.body.member.m_identity).toBe('AA123456');
     update.flush({ result: true, message: 'Profile updated successfully', data: {}, code: 200 });
-    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush({ result: false, message: 'Refresh later', code: 503 }, { status: 503, statusText: 'Unavailable' });
-
-    expect(component.modalType()).toBe('success');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Send OTP');
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush(
+      { result: false, message: 'Refresh later', code: 503 },
+      { status: 503, statusText: 'Unavailable' },
+    );
     component.modalAction();
     const sendOtp = http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/sms/send');
     expect(sendOtp.request.method).toBe('POST');

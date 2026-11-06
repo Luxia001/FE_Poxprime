@@ -1,0 +1,190 @@
+<form
+  nz-form
+  nzLayout="vertical"
+  [formGroup]="profile"
+  (ngSubmit)="submitForm()"
+  class="profile-form mt-6 sm:mt-8"
+  novalidate
+>
+  <fieldset class="rounded-xl border border-slate-200 px-4 pb-3 pt-5 sm:px-6 sm:pb-4 sm:pt-6">
+    <legend class="px-3 text-xl font-bold text-slate-800 sm:text-2xl">General information</legend>
+    <div class="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2 sm:gap-y-2">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="firstName">First name (Eng)</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your first name.">
+          <input nz-input id="firstName" formControlName="firstName" placeholder="First name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="lastName">Last name (Eng)</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your last name.">
+          <input nz-input id="lastName" formControlName="lastName" placeholder="Last name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="gender">Gender</nz-form-label>
+        <nz-form-control nzErrorTip="Please select your gender.">
+          <nz-select
+            id="gender"
+            formControlName="gender"
+            nzPlaceHolder="Select gender"
+            class="w-full"
+            [nzStatus]="
+              profile.controls.gender.dirty && profile.controls.gender.invalid ? 'error' : ''
+            "
+          >
+            <nz-option nzValue="MALE" nzLabel="Male"></nz-option>
+            <nz-option nzValue="FEMALE" nzLabel="Female"></nz-option>
+            <nz-option nzValue="OTHER" nzLabel="Other"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="birthDate">Date of birth</nz-form-label>
+        <nz-form-control [nzErrorTip]="birthDateError">
+          <input
+            nz-input
+            id="birthDate"
+            type="date"
+            formControlName="birthDate"
+            [max]="maxBirthDate"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <ng-template #birthDateError let-control>
+        @if (control.hasError('required')) {
+          Please select your date of birth.
+        } @else if (control.hasError('minAge')) {
+          You must be at least 18 years old.
+        } @else if (control.hasError('futureDate')) {
+          Date of birth cannot be in the future.
+        } @else if (control.hasError('invalidDate')) {
+          Invalid date.
+        }
+      </ng-template>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="nationality">Nationality</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your nationality.">
+          <input
+            nz-input
+            id="nationality"
+            formControlName="nationality"
+            placeholder="Nationality"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="country">Country</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your country.">
+          <input nz-input id="country" formControlName="country" placeholder="Country" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="sm:col-span-2">
+        <nz-form-label nzRequired nzFor="identity">Passport / Identity number</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your passport or identity number.">
+          <input
+            nz-input
+            id="identity"
+            formControlName="identity"
+            placeholder="Passport or identity number"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <div class="grid gap-x-4 gap-y-1 sm:col-span-2 sm:grid-cols-[9rem_1fr] sm:gap-y-2">
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="phoneCode">Phone code</nz-form-label>
+          <nz-form-control nzErrorTip="Please select a phone code.">
+            <nz-select
+              id="phoneCode"
+              formControlName="phoneCode"
+              nzShowSearch
+              nzAllowClear
+              nzPlaceHolder="+66"
+              class="w-full"
+              [nzCustomTemplate]="selected"
+            >
+              @for (item of phoneCodes; track item.code + item.country) {
+                <nz-option
+                  [nzValue]="item.code"
+                  [nzLabel]="item.code + ' — ' + item.country"
+                ></nz-option>
+              }
+            </nz-select>
+
+            <!-- ตอนเลือกแล้วให้แสดงแค่ +66 (ในลิสต์ยังเห็นชื่อประเทศ) -->
+            <ng-template #selected let-selected>
+              {{ selected.nzValue }}
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="phoneNumber">Phone number</nz-form-label>
+          <nz-form-control nzErrorTip="Enter 5–14 digits.">
+            <input
+              nz-input
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              inputmode="numeric"
+              placeholder="Phone number"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mt-6 rounded-xl border border-slate-200 px-4 pb-3 pt-5 sm:mt-8 sm:px-6 sm:pb-4 sm:pt-6">
+    <legend class="px-3 text-xl font-bold text-slate-800 sm:text-2xl">Address</legend>
+    <div class="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2 sm:gap-y-2">
+      <nz-form-item class="sm:col-span-2">
+        <nz-form-label nzRequired nzFor="addressNo">Address</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your address.">
+          <input nz-input id="addressNo" formControlName="addressNo" placeholder="Address" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="district">District</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your district."
+          ><input nz-input id="district" formControlName="district" placeholder="District"
+        /></nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="city">City</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your city.">
+          <input nz-input id="city" formControlName="city" placeholder="City" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="state">State / Province</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter your state or province."
+          ><input nz-input id="state" formControlName="state" placeholder="State or province"
+        /></nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="zipCode">Zipcode</nz-form-label>
+        <nz-form-control nzErrorTip="Enter a valid postal code.">
+          <input
+            nz-input
+            id="zipCode"
+            formControlName="zipCode"
+            inputmode="numeric"
+            placeholder="Postal code"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </fieldset>
+  @if (showSubmit()) {
+  <button
+    nz-button
+    nzType="primary"
+    type="submit"
+    [nzLoading]="submitting()"
+    [disabled]="submitting()"
+    class="mt-8 h-12! w-full rounded-lg! bg-(--primary-theme--)! text-white!"
+  >
+    {{ submitLabel() }}
+  </button>
+  }
+</form>

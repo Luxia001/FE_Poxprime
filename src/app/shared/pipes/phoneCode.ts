@@ -15,3 +15,14 @@ export const PHONE_CODES: readonly PhoneCode[] = [
   { code: '+86', country: 'China' },
   { code: '+91', country: 'India' },
 ];
+
+export function toLocalPhone(phone: string | null, code: string | null): string {
+  if (!phone) return '';
+  const digitsCode = (code ?? '').replace(/\D/g, '');
+  let digits = phone.replace(/\D/g, '');
+  // ถ้าเบอร์ขึ้นต้นด้วยรหัสประเทศ (เช่น +660900000003) ให้ตัดออก
+  if (phone.startsWith('+') && digitsCode && digits.startsWith(digitsCode)) {
+    digits = digits.slice(digitsCode.length);
+  }
+  return digits;
+}

@@ -7,15 +7,31 @@ import {
   LoginRequest,
   LoginResponse,
   LoginSuccessResponse,
+  TwoFactorVerifyRequest,
+  TwoFactorVerifyResponse,
+  TwoFactorVerifySuccessResponse,
 } from '../models/login.model';
 
 @Injectable({ providedIn: 'root' })
 export class LoginApiService {
   private readonly http = inject(HttpClient);
   private readonly endpoint = `${environment.apiUrl}/v1/auth/login`;
+  private readonly twoFactorEndpoint = `${environment.apiUrl}/v1/auth/2fa/verify`;
 
   login(request: LoginRequest): Observable<LoginSuccessResponse> {
     return this.http.post<LoginResponse>(this.endpoint, request).pipe(
+      map((response) => {
+        if (!response.result) throw response;
+        return response;
+      }),
+      catchError((response: HttpErrorResponse | LoginErrorResponse) =>
+        throwError(() => this.normalizeError(response)),
+      ),
+    );
+  }
+
+  verifyTwoFactor(request: TwoFactorVerifyRequest): Observable<TwoFactorVerifySuccessResponse> {
+    return this.http.post<TwoFactorVerifyResponse>(this.twoFactorEndpoint, request).pipe(
       map((response) => {
         if (!response.result) throw response;
         return response;

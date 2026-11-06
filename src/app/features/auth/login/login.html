@@ -139,3 +139,17 @@
     </div>
   </div>
 </div>
+
+<app-otp-modal
+  [open]="twoFactorOpen()"
+  title="Two-factor authentication"
+  message="Enter the 6-digit code from your authenticator app."
+  [control]="twoFactorCode"
+  [submitting]="twoFactorSubmitting()"
+  [error]="twoFactorError()"
+  [showRememberDevice]="true"
+  [rememberDevice]="rememberDevice()"
+  (rememberDeviceChange)="rememberDevice.set($event)"
+  (closed)="closeTwoFactor()"
+  (confirmed)="verifyTwoFactor()"
+/>

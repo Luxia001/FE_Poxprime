@@ -17,9 +17,15 @@
   <div class="md:flex justify-between">
     <h3 class="text-lg font-bold text-slate-900">{{ text().personalDetails }}</h3>
 
-    <div class="flex gap-5">
+    <div class="flex gap-5 mb-5">
       <button>Change Password</button>
-      <button>Edit Profile</button>
+      <button
+        type="button"
+        (click)="openEditProfile()"
+        class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white!"
+      >
+        Edit Profile
+      </button>
     </div>
   </div>
   <div class="grid md:flex gap-5">
