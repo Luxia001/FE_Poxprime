@@ -21,6 +21,16 @@ describe('User', () => {
     component = fixture.componentInstance;
     http = TestBed.inject(HttpTestingController);
     http.expectOne('https://stg-portal-api.speedandnumber.com/v1/member/profile').flush(profileResponse);
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/kyc').flush(
+      { result: false, message: 'No KYC record', code: 404 },
+      { status: 404, statusText: 'Not Found' },
+    );
+    http.expectOne('https://stg-portal-api.speedandnumber.com/v1/verify/totp/status').flush({
+      result: true,
+      message: 'TOTP status retrieved',
+      data: { isEnabled: false, isSetupPending: false },
+      code: 200,
+    });
     await fixture.whenStable();
     fixture.detectChanges();
   });
@@ -77,7 +87,7 @@ describe('User', () => {
     const kycButton = fixture.nativeElement.querySelector('app-verify button') as HTMLButtonElement;
     kycButton.click();
     await fixture.whenStable();
-    expect(navigate).toHaveBeenCalledWith(['/main/kyc-verification']);
+    expect(navigate).toHaveBeenCalledWith(['/account/kyc-verification']);
   });
 });
 

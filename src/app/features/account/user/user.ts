@@ -8,6 +8,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Profile } from '../../../shared/components/pages/profile/profile';
 import { KycApi } from '../../../shared/services/verify/kyc.service';
 import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
+import { TotpApi } from '../../../shared/services/verify/google.service';
 
 @Component({
   imports: [Verify, NzIconModule, NzButtonModule, Profile, BarHead],
@@ -22,6 +23,7 @@ export class User {
   readonly activeTab = signal(0);
   readonly kycApi = inject(KycApi);
   readonly profileApi = inject(ProfileApi);
+  readonly totpApi = inject(TotpApi);
 
   readonly profile = computed(() => {
     const response = this.profileApi.profile();
@@ -48,6 +50,9 @@ export class User {
   readonly emailVerifyStatus = computed(() =>
     this.profileApi.profile()?.member.isConfirm === 1 ? 1 : 2,
   );
+  readonly googleAuthStatus = computed(() =>
+    this.totpApi.status()?.isEnabled ? 1 : this.totpApi.status()?.isSetupPending ? 2 : 3,
+  );
   readonly VerifyStatus = computed(() => {
     return {
       kyc: this.kycApi.kyc()?.kyc_stat ?? 3,
@@ -61,9 +66,13 @@ export class User {
   constructor() {
     this.profileApi.loadProfile();
     this.kycApi.load();
+    this.totpApi.loadStatus();
   }
 
   openKycVerification(): void {
     void this.router.navigate(['/account/kyc-verification']);
+  }
+  openGoogelVerification(): void {
+    void this.router.navigate(['/account/google-verification']);
   }
 }

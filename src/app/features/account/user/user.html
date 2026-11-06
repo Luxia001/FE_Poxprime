@@ -82,7 +82,8 @@
                 [title]="text().authenticator"
                 [description]="[text().authenticatorHint]"
                 iconType="google"
-                [actionLabel]="2"
+                [actionLabel]="googleAuthStatus()"
+                (action)="openGoogelVerification()"
               />
               <app-verify
                 [title]="text().phoneVerification"
