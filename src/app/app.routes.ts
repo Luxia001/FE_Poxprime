@@ -8,6 +8,7 @@ import { AccountSecurity } from './features/account/account-security/account-sec
 import { authGuard } from './core/guards/auth.guard';
 import { KycVerification } from './features/kyc-verification/kyc-verification';
 import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
+import { Download } from './features/account/download/download';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
       {
         path: 'security',
         component: AccountSecurity,
+      },
+      {
+        path: 'downloadMT5',
+        component: Download,
       },
     ],
   },

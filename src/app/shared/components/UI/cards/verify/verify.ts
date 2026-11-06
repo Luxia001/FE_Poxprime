@@ -26,7 +26,7 @@ const STATE_MAP: Record<number, { status: StatusKey; tone: StatusTone; mode: Dis
 })
 export class Verify {
   readonly title = input('Title');
-  readonly description = input('description');
+  readonly description = input<string | string[]>('');
   readonly iconType = input('safety');
   readonly actionLabel = input(0);
   readonly action = output<void>();
@@ -35,6 +35,10 @@ export class Verify {
   readonly text = this.locale.text;
   private readonly state = computed(() => STATE_MAP[this.actionLabel()] ?? STATE_MAP[3]);
 
+  readonly descriptionLines = computed(() => {
+    const d = this.description();
+    return Array.isArray(d) ? d : d ? [d] : [];
+  });
   readonly status = computed(() => this.text().status[this.state().status]);
   readonly statusTone = computed(() => this.state().tone);
   readonly mode = computed(() => this.state().mode);

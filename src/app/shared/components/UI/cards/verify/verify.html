@@ -14,14 +14,16 @@
   </div>
 
   <h3 class="mb-0 mt-4 text-base font-bold text-slate-900">{{ title() }}</h3>
-  <p class="mb-0 mt-2 text-sm text-center leading-6 text-slate-500">{{ description() }}</p>
-@if (mode() === 'badge') {
-  <span class="rounded-full bg-white/70 px-2.5 py-1 text-center text-xs font-semibold">
-    {{ status() }}
-  </span>
-} @else {
-  <button type="button" (click)="action.emit()" class="underline">
-    {{ status() }}
-  </button>
-}
+  @for (item of descriptionLines(); track $index) {
+    <p class="m-0 text-sm text-slate-500">{{ item }}</p>
+  }
+  @if (mode() === 'badge') {
+    <span class="rounded-full bg-white/70 px-2.5 py-1 text-center text-xs font-semibold">
+      {{ status() }}
+    </span>
+  } @else {
+    <button type="button" (click)="action.emit()" class="underline">
+      {{ status() }}
+    </button>
+  }
 </article>

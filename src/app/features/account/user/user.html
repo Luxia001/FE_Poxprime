@@ -73,26 +73,26 @@
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
               <app-verify
                 [title]="text().kycVerification"
-                [description]="text().kycDescription"
+                [description]="[text().kycDescription]"
                 iconType="safety"
                 [actionLabel]="VerifyStatus().kyc"
                 (action)="openKycVerification()"
               />
               <app-verify
                 [title]="text().authenticator"
-                [description]="text().authenticatorHint"
+                [description]="[text().authenticatorHint]"
                 iconType="google"
                 [actionLabel]="2"
               />
               <app-verify
                 [title]="text().phoneVerification"
-                [description]="text().phoneVerifiedHint"
+                [description]="[text().phoneVerifiedHint]"
                 iconType="phone"
                 [actionLabel]="VerifyStatus().phone"
               />
               <app-verify
                 [title]="text().emailVerification"
-                [description]="text().emailVerifiedHint"
+                [description]="[text().emailVerifiedHint]"
                 iconType="mail"
                 [actionLabel]="emailVerifyStatus()"
               />

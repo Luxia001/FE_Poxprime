@@ -1,0 +1,13 @@
+<div class="grid gap-4">
+  <app-bar-head header="downloadMT5"></app-bar-head>
+  <div class="grid md:grid-cols-4 gap-4">
+    @for (item of data; track item.platform) {
+      <app-verify
+        [title]="item.platform"
+        [actionLabel]="3"
+        [iconType]="item.icon"
+        [description]="item.description"
+      ></app-verify>
+    }
+  </div>
+</div>

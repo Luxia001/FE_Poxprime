@@ -77,7 +77,7 @@ export class Sidebar {
         { title: 'Notification Center', icon: 'bell', link: null },
         { title: 'Profile', icon: 'user', link: '/account/user' },
         { title: 'Account Security', icon: 'safety-certificate', link: '/account/security' },
-        { title: 'Download MT5', icon: 'cloud-download', link: null },
+        { title: 'Download MT5', icon: 'cloud-download', link: '/account/downloadMT5' },
       ],
     },
   ];
