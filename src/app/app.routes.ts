@@ -83,6 +83,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/general/dashboard/dashboard').then((component) => component.Dashboard),
       },
+      {
+        path: 'wallet',
+        loadComponent: () =>
+          import('./features/general/wallet/wallet').then((component) => component.Wallet),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

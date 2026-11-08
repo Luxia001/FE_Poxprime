@@ -1,0 +1,127 @@
+<section class="grid gap-6">
+  <app-bar-head header="MT5 & Wallet" />
+
+  @if (api.error()) {
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-red-50 p-4 text-sm text-red-700"
+      role="alert"
+    >
+      <span>{{ api.error() }}</span
+      ><button type="button" class="font-semibold underline" (click)="api.load(true)">
+        Try again
+      </button>
+    </div>
+  }
+
+  <section>
+    <div class="mb-3">
+      <h2 class="m-0 text-lg font-bold text-slate-900">Your trading accounts</h2>
+      <p class="mb-0 mt-1 text-sm text-slate-500">
+        Wallet and MT5 accounts returned by the trading API.
+      </p>
+    </div>
+    @if (api.loading()) {
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="status">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="h-64 animate-pulse rounded-2xl bg-slate-200"></div>
+        }
+      </div>
+    } @else if (api.wallets().length) {
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        @for (wallet of api.wallets(); track wallet.id) {
+          <article
+            class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <div
+              class="absolute inset-x-0 top-0 h-1"
+              [class.bg-emerald-500]="wallet.wallet_status === 1"
+              [class.bg-slate-300]="wallet.wallet_status !== 1"
+            ></div>
+            <header class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="m-0 truncate text-base font-bold text-slate-900">
+                  {{
+                    wallet.wallet_account_name ||
+                      wallet.wallet_account_type_name ||
+                      'Trading account'
+                  }}
+                </p>
+                <p class="mb-0 mt-1 font-mono text-xs text-slate-500">
+                  #{{ wallet.wallet_account_no }}
+                </p>
+              </div>
+              <span
+                class="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
+                [class.bg-emerald-50]="wallet.wallet_status === 1"
+                [class.text-emerald-700]="wallet.wallet_status === 1"
+                [class.bg-slate-100]="wallet.wallet_status !== 1"
+                [class.text-slate-600]="wallet.wallet_status !== 1"
+                >{{ wallet.wallet_status === 1 ? 'Active' : 'Inactive' }}</span
+              >
+            </header>
+            <div class="mt-6">
+              <p class="m-0 text-xs uppercase tracking-wide text-slate-400">Balance</p>
+              <p class="mb-0 mt-1 text-2xl font-bold text-slate-900">
+                {{ money(wallet.wallet_balance) }}
+                <span class="text-sm font-semibold text-slate-500">{{
+                  wallet.wallet_currency
+                }}</span>
+              </p>
+            </div>
+            <dl class="mt-6 grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 text-sm">
+              <div>
+                <dt class="text-xs text-slate-400">Account type</dt>
+                <dd class="m-0 mt-1 font-medium text-slate-700">
+                  {{ wallet.wallet_account_type_name || wallet.wallet_trading_type }}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-xs text-slate-400">Leverage</dt>
+                <dd class="m-0 mt-1 font-medium text-slate-700">
+                  {{ wallet.wallet_leverage ? '1:' + wallet.wallet_leverage : '-' }}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-xs text-slate-400">Equity</dt>
+                <dd class="m-0 mt-1 font-medium text-slate-700">
+                  {{ money(wallet.wallet_equity) }}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-xs text-slate-400">Server</dt>
+                <dd class="m-0 mt-1 truncate font-medium text-slate-700">
+                  {{ wallet.wallet_server || '-' }}
+                </dd>
+              </div>
+            </dl>
+            <footer class="mt-5 flex flex-wrap gap-2">
+              @if (wallet.is_deposit === 1) {
+                <span class="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"
+                  >Deposit</span
+                >
+              }
+              @if (wallet.is_withdraw === 1) {
+                <span
+                  class="rounded-lg bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700"
+                  >Withdraw</span
+                >
+              }
+              @if (wallet.is_leverage === 1) {
+                <span class="rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700"
+                  >Change leverage</span
+                >
+              }
+            </footer>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
+        <p class="m-0 font-semibold text-slate-800">No trading account found</p>
+        <p class="mb-0 mt-1 text-sm text-slate-500">
+          Your wallet and MT5 accounts will appear here.
+        </p>
+      </div>
+    }
+  </section>
+</section>

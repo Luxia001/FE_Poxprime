@@ -50,7 +50,7 @@ export class Sidebar {
       header: 'General',
       menu: [
         { title: 'Dashboard', icon: 'appstore', link: '/general/dashboard' },
-        { title: 'MT5 & Wallet', icon: 'wallet', link: null },
+        { title: 'MT5 & Wallet', icon: 'wallet', link: '/general/wallet' },
       ],
     },
     {
