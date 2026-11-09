@@ -1,0 +1,187 @@
+@if (open()) {
+  <div
+    class="fixed inset-0 z-100 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm"
+  >
+    <section
+      class="max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="open-account-title"
+    >
+      <header class="flex items-start justify-between gap-4">
+        <div>
+          <p class="m-0 text-xs font-semibold uppercase tracking-wider text-blue-700">
+            Trading account
+          </p>
+          <h2 id="open-account-title" class="mb-0 mt-1 text-xl font-bold text-slate-900">
+            Open account
+          </h2>
+        </div>
+        <button
+          type="button"
+          class="flex size-9 items-center justify-center rounded-lg border-0 bg-slate-100 text-xl text-slate-600"
+          [disabled]="submitting()"
+          (click)="close()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </header>
+      <form nz-form class="mt-6 grid gap-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="inline-flex overflow-hidden rounded-xl border border-gray-200" role="group">
+          @for (k of ['live', 'demo']; track k) {
+            <button
+              type="button"
+              class="px-5 py-2 text-sm font-semibold capitalize transition w-full"
+              [class]="
+                kind() === k
+                  ? 'bg-(--primary-theme--) text-white!'
+                  : 'bg-white text-slate-700 hover:bg-gray-50'
+              "
+              [attr.aria-pressed]="kind() === k"
+              (click)="setKind($any(k))"
+            >
+              {{ k }}
+            </button>
+          }
+        </div>
+
+        <nz-form-item>
+          <nz-form-label nzFor="accountName">Account name</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              id="accountName"
+              formControlName="wallet_account_name"
+              maxlength="100"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        @if (kind() === 'demo') {
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="balance">Initial balance</nz-form-label>
+            <nz-form-control nzErrorTip="Please select an initial balance.">
+              <nz-select nzId="balance" formControlName="wallet_balance" nzPlaceHolder="Select">
+                @for (b of demoBalances; track b) {
+                  <nz-option [nzValue]="b" [nzLabel]="b | money" />
+                }
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        }
+
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="accountType">Account type</nz-form-label>
+          <nz-form-control nzErrorTip="Please select an account type.">
+            <nz-select
+              nzId="accountType"
+              formControlName="wallet_account_type"
+              nzPlaceHolder="Select account type"
+            >
+              @for (t of typesOfKind(); track t.id) {
+                <nz-option
+                  [nzValue]="t.id"
+                  [nzLabel]="t.account_name + ' (' + t.account_currency + ')'"
+                />
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="leverage">Leverage</nz-form-label>
+          <nz-form-control nzErrorTip="Please select leverage.">
+            <nz-select
+              nzId="leverage"
+              formControlName="wallet_leverage"
+              nzPlaceHolder="Select leverage"
+            >
+              @for (l of leverages(); track l) {
+                <nz-option [nzValue]="l" [nzLabel]="'1:' + l" />
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        @if (kind() === 'live') {
+          <div class="grid gap-3">
+            <span class="text-sm font-semibold text-slate-700">Master password</span>
+            <div class="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Password type">
+              <button
+                type="button"
+                class="rounded-xl border p-4 text-left transition"
+                [class]="
+                  passwordMode() === 'random'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 bg-white'
+                "
+                [attr.aria-pressed]="passwordMode() === 'random'"
+                (click)="setPasswordMode('random')"
+              >
+                <span class="block font-semibold text-slate-900">Random password</span>
+                <span class="mt-1 block text-xs text-slate-500"
+                  >The system generates a secure password.</span
+                >
+              </button>
+              <button
+                type="button"
+                class="rounded-xl border p-4 text-left transition"
+                [class]="
+                  passwordMode() === 'custom'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 bg-white'
+                "
+                [attr.aria-pressed]="passwordMode() === 'custom'"
+                (click)="setPasswordMode('custom')"
+              >
+                <span class="block font-semibold text-slate-900">Custom password</span>
+                <span class="mt-1 block text-xs text-slate-500"
+                  >Create your own master password.</span
+                >
+              </button>
+            </div>
+
+            @if (passwordMode() === 'custom') {
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="masterPassword">Password</nz-form-label>
+                <nz-form-control nzErrorTip="Password must contain at least 8 characters.">
+                  <input
+                    nz-input
+                    id="masterPassword"
+                    type="password"
+                    formControlName="wallet_master_password"
+                    autocomplete="new-password"
+                    placeholder="Enter master password"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            }
+          </div>
+        }
+
+        @if (error()) {
+          <p class="m-0 text-sm text-red-500" role="alert">{{ error() }}</p>
+        }
+
+        <footer class="flex gap-3">
+          <button
+            type="button"
+            class="h-11 rounded-lg border border-gray-200 bg-white px-5 font-semibold w-full"
+            [disabled]="submitting()"
+            (click)="close()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="h-11 rounded-lg bg-(--primary-theme--) px-5 font-semibold text-white! disabled:opacity-60 w-full"
+            [disabled]="submitting() || !selectedType()"
+          >
+            {{ submitting() ? 'Opening...' : 'Open account' }}
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+}

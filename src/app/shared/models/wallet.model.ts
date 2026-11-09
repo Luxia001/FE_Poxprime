@@ -136,3 +136,35 @@ export interface WalletDetailSuccessResponse extends successResponse {
   data: WalletDetail;
 }
 export type WalletDetailResponse = WalletDetailSuccessResponse | errorResponse;
+
+export interface CreateLiveWalletRequest {
+  wallet_account_name: string;
+  wallet_account_type: number;
+  wallet_leverage: number;
+  wallet_trading_type: 'live';
+  wallet_master_password?: string;
+}
+
+export interface CreateDemoWalletRequest {
+  wallet_account_name: string;
+  wallet_account_type: number;
+  wallet_leverage: number;
+  wallet_trading_type: 'demo';
+  wallet_balance: number;
+
+  wallet_account_no?: string | number;
+  isDeposit: number;
+  isWithdraw: number;
+  isTranIn: number;
+  isTranOut: number;
+  wallet_symbol_us: string;
+  wallet_symbol_th: string;
+}
+
+export type CreateWalletRequest = CreateLiveWalletRequest | CreateDemoWalletRequest;
+
+export interface CreateWalletSuccessResponse extends successResponse {
+  data: WalletDetail | Wallet;
+}
+
+export type CreateWalletResponse = CreateWalletSuccessResponse | errorResponse;

@@ -10,9 +10,18 @@ import { TableAccount } from '../../../shared/components/UI/table/account-table/
 import { MoneyPipe } from '../../../shared/pipes/walet.pipe';
 import { ProfileApi } from '../../account/services/profile-api';
 import { WalletDetailModal } from '../../../shared/components/UI/modals/wallet-detail-modal/wallet-detail-modal';
+import { OpenAccountModal } from '../../../shared/components/UI/modals/open-account-modal/open-account-modal';
 
 @Component({
-  imports: [FormsModule, NzSelectModule, BarHead, TableAccount, MoneyPipe, WalletDetailModal],
+  imports: [
+    FormsModule,
+    NzSelectModule,
+    BarHead,
+    TableAccount,
+    MoneyPipe,
+    WalletDetailModal,
+    OpenAccountModal,
+  ],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
   templateUrl: './wallet.html',
@@ -42,6 +51,7 @@ export class Wallet {
   readonly walletDetailLoading = signal(false);
   readonly walletDetailError = signal('');
   readonly selectedWallet = signal<WalletData | null>(null);
+  readonly openAccountModal = signal(false);
   readonly totalBalance = computed(() =>
     this.api.wallets().reduce((sum, item) => sum + toNumber(item.wallet_balance), 0),
   );
@@ -85,6 +95,11 @@ export class Wallet {
     this.walletModalOpen.set(false);
     this.selectedWallet.set(null);
     this.walletDetailError.set('');
+  }
+
+  accountCreated(): void {
+    this.openAccountModal.set(false);
+    this.api.load(true);
   }
 
   selectType(typeId: number | null): void {

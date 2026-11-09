@@ -1,6 +1,9 @@
 import { finalize, forkJoin, map, Observable } from 'rxjs';
 import {
   AccountTypesResponse,
+  CreateWalletRequest,
+  CreateWalletResponse,
+  CreateWalletSuccessResponse,
   LeveragesResponse,
   Wallet,
   WalletDetailResponse,
@@ -96,6 +99,15 @@ export class WalletTypeApi {
       map((res) => {
         if (!res.result) throw res;
         return detailToWallet(res.data);
+      }),
+    );
+  }
+
+  createWallet(payload: CreateWalletRequest): Observable<CreateWalletSuccessResponse> {
+    return this.http.post<CreateWalletResponse>(`${this.base}/wallet`, payload).pipe(
+      map((res) => {
+        if (!res.result) throw res;
+        return res;
       }),
     );
   }

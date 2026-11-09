@@ -22,7 +22,7 @@
         Table
       </button>
     </div>
-    <button type="button" class="text-sm">Open account</button>
+    <button type="button" class="text-sm" (click)="openAccountModal.set(true)">Open account</button>
   </section>
 
   @if (api.error()) {
@@ -196,4 +196,11 @@
   [fullName]="profileDisplay().fullName"
   [imageUrl]="profileDisplay().imageUrl || ''"
   (closed)="closeWalletModal()"
+/>
+
+<app-open-account-modal
+  [open]="openAccountModal()"
+  [accountTypes]="api.accountTypes()"
+  (closed)="openAccountModal.set(false)"
+  (created)="accountCreated()"
 />
