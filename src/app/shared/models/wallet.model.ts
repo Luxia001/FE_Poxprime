@@ -92,3 +92,47 @@ export interface WalletsSuccessResponse extends successResponse {
 }
 
 export type WalletsResponse = WalletsSuccessResponse | errorResponse;
+
+export interface WalletDetail {
+  id: number;
+  member_id: number;
+  wallet_type: WalletKind;
+  wallet_trading_type: 'live' | 'demo';
+  wallet_account_name: string;
+  wallet_account_no: string;
+  wallet_account_type: string | null;
+  wallet_account_type_name: string | null;
+  wallet_account_group: string | null;
+  wallet_leverage: number | null;
+  wallet_balance: number;
+  wallet_credit: number;
+  wallet_margin: number;
+  wallet_equity: number;
+  wallet_iv: string | null;
+  wallet_symbol_us: string;
+  wallet_symbol_th: string;
+  wallet_currency: string;
+  wallet_server: string | null;
+  wallet_status: number;
+  wallet_master_type: string;
+  wallet_master_no: string | null;
+  wallet_master_name: string | null;
+  wallet_following_name: string | null;
+  wallet_rights: number;
+  wallet_deposit_max: number;
+  createdAt: string;
+  updatedAt: string | null;
+  isWithdraw: number;
+  isDeposit: number;
+  isTranIn: number;
+  isTranOut: number;
+  isLeverage: number;
+  isTrading: number;
+  isTradingEnabled: number;
+  // ไม่ประกาศ password/IP/admin field: UI ไม่ควรแตะ
+}
+
+export interface WalletDetailSuccessResponse extends successResponse {
+  data: WalletDetail;
+}
+export type WalletDetailResponse = WalletDetailSuccessResponse | errorResponse;

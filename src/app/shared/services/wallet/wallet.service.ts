@@ -3,6 +3,7 @@ import {
   AccountTypesResponse,
   LeveragesResponse,
   Wallet,
+  WalletDetailResponse,
   WalletsResponse,
   WalletType,
   WalletTypeResponse,
@@ -14,6 +15,7 @@ import { getErrorMessage } from '../../../core/utils/error-message';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { detailToWallet } from '../../DTOs/wallet/walletDetail.dto';
 
 @Injectable({ providedIn: 'root' })
 export class WalletTypeApi {
@@ -37,7 +39,8 @@ export class WalletTypeApi {
   readonly demoTypes = computed(() => this.activeTypes().filter((t) => t.account_type === 'demo'));
 
   load(force = false): void {
-    if (this.loadingState() || (!force && (this.typesState().length || this.walletsState().length))) return;
+    if (this.loadingState() || (!force && (this.typesState().length || this.walletsState().length)))
+      return;
     this.loadingState.set(true);
     this.errorState.set('');
 
@@ -84,6 +87,15 @@ export class WalletTypeApi {
       map((res) => {
         if (!res.result) throw res;
         return res.data.leverages;
+      }),
+    );
+  }
+
+  getWalletById(id: number): Observable<Wallet> {
+    return this.http.get<WalletDetailResponse>(`${this.base}/${id}`).pipe(
+      map((res) => {
+        if (!res.result) throw res;
+        return detailToWallet(res.data);
       }),
     );
   }

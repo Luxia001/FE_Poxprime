@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Wallet } from '../../../../models/wallet.model';
 import { MoneyPipe, WalletTypeLabelPipe } from '../../../../pipes/walet.pipe';
 
@@ -11,4 +11,5 @@ import { MoneyPipe, WalletTypeLabelPipe } from '../../../../pipes/walet.pipe';
 export class TableAccount {
   readonly wallets = input<Wallet[]>([]);
   readonly coloumns = input<string[]>([]);
+  readonly selected = output<number>();
 }

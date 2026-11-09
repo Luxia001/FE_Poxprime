@@ -2,31 +2,46 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { finalize, forkJoin } from 'rxjs';
-import { WalletType } from '../../../shared/models/wallet.model';
+import { Wallet as WalletData, WalletType } from '../../../shared/models/wallet.model';
 import { WalletTypeApi } from '../../../shared/services/wallet/wallet.service';
 import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
 import { toNumber } from '../../../shared/utils/wallet.mapper';
 import { TableAccount } from '../../../shared/components/UI/table/account-table/account-table.component';
 import { MoneyPipe } from '../../../shared/pipes/walet.pipe';
+import { ProfileApi } from '../../account/services/profile-api';
+import { WalletDetailModal } from '../../../shared/components/UI/modals/wallet-detail-modal/wallet-detail-modal';
 
 @Component({
-  imports: [FormsModule, NzSelectModule, BarHead, TableAccount, MoneyPipe],
+  imports: [FormsModule, NzSelectModule, BarHead, TableAccount, MoneyPipe, WalletDetailModal],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
   templateUrl: './wallet.html',
 })
 export class Wallet {
+  readonly profileApi = inject(ProfileApi);
+  readonly profileDisplay = computed(() => {
+    const response = this.profileApi.profile();
+    return {
+      fullName: `${response?.member.m_name} ${response?.member.m_lastname}`.trim(),
+      email: response?.member.email,
+      imageUrl: response?.member.m_image_url,
+    };
+  });
   readonly api = inject(WalletTypeApi);
   readonly selectedTypeId = signal<number | null>(null);
   readonly selectedType = signal<WalletType | null>(null);
   readonly selectedLeverages = signal<number[]>([]);
   readonly detailLoading = signal(false);
-  readonly isGrid = signal(false);
+  readonly isGrid = signal(true);
   readonly activeClass =
     'bg-linear-to-r from-(--primary-theme--) to-sky-500 text-white! border-transparent';
   readonly inactiveClass = 'bg-white text-slate-700 border-gray-200 hover:bg-gray-50';
 
   readonly detailError = signal('');
+  readonly walletModalOpen = signal(false);
+  readonly walletDetailLoading = signal(false);
+  readonly walletDetailError = signal('');
+  readonly selectedWallet = signal<WalletData | null>(null);
   readonly totalBalance = computed(() =>
     this.api.wallets().reduce((sum, item) => sum + toNumber(item.wallet_balance), 0),
   );
@@ -45,6 +60,31 @@ export class Wallet {
 
   onchangeView(grid: boolean): void {
     this.isGrid.set(grid);
+  }
+
+  openWallet(walletId: number): void {
+    this.walletModalOpen.set(true);
+    this.walletDetailLoading.set(true);
+    this.walletDetailError.set('');
+    this.selectedWallet.set(null);
+
+    this.api
+      .getWalletById(walletId)
+      .pipe(finalize(() => this.walletDetailLoading.set(false)))
+      .subscribe({
+        next: (wallet) => this.selectedWallet.set(wallet),
+        error: (error: { message?: string; error?: string | { message?: string } }) => {
+          const detail = typeof error.error === 'string' ? error.error : error.error?.message;
+          this.walletDetailError.set(detail || error.message || 'Unable to load wallet details.');
+        },
+      });
+  }
+
+  closeWalletModal(): void {
+    if (this.walletDetailLoading()) return;
+    this.walletModalOpen.set(false);
+    this.selectedWallet.set(null);
+    this.walletDetailError.set('');
   }
 
   selectType(typeId: number | null): void {
