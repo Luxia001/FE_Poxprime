@@ -1,8 +1,8 @@
 import { WalletType, WalletTypeRaw } from '../models/wallet.model';
 
-const toNumber = (v: number | string): number => {
-  const n = typeof v === 'number' ? v : Number(v);
-  return Number.isFinite(n) ? n : 0;
+export const toNumber = (value: number | string): number => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
 };
 
 const toLeverages = (v: number[] | string): number[] => {

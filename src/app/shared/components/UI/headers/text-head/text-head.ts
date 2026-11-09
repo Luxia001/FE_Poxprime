@@ -7,5 +7,5 @@ import { Component, input } from '@angular/core';
   templateUrl: './text-head.html',
 })
 export class TextHead {
-  readonly title = input('Menu'); // มีค่า default
+  readonly title = input<string | number>('Menu'); // มีค่า default
 }
