@@ -129,7 +129,8 @@ export interface WalletDetail {
   isLeverage: number;
   isTrading: number;
   isTradingEnabled: number;
-  // ไม่ประกาศ password/IP/admin field: UI ไม่ควรแตะ
+  wallet_master_password: null | string;
+  wallet_investor_password: null | string;
 }
 
 export interface WalletDetailSuccessResponse extends successResponse {

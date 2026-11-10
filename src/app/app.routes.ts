@@ -14,7 +14,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'login',
+    redirectTo: 'general/dashboard',
   }, // app.routes.ts (อยู่นอก authGuard, ใต้ auth layout หรือ route เดี่ยว)
   {
     path: 'v1/member/verification/:token',

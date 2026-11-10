@@ -4,7 +4,7 @@
     role="presentation"
   >
     <section
-      class="max-h-[90dvh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-6"
+      class="grid gap-3 w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl"
       role="dialog"
       aria-modal="true"
       aria-labelledby="wallet-detail-title"
@@ -28,7 +28,6 @@
           ×
         </button>
       </header>
-
       @if (loading()) {
         <div class="mt-6 grid gap-3" role="status">
           @for (item of [1, 2, 3]; track item) {
@@ -40,7 +39,7 @@
           {{ error() }}
         </div>
       } @else if (wallet(); as item) {
-        <div class="mt-6 rounded-xl border border-gray-100 bg-slate-50 p-4">
+        <div class="rounded-xl border border-gray-100 bg-slate-50 p-4">
           <div class="flex items-center gap-3">
             <div
               class="flex size-12 items-center justify-center overflow-hidden rounded-full bg-blue-700 font-bold text-white"
@@ -55,25 +54,41 @@
               <p class="m-0 truncate text-sm font-semibold text-slate-900">
                 {{ fullName() || 'User' }}
               </p>
-              <p class="mb-0 mt-1 font-mono text-xs text-slate-500">
-                #{{ item.wallet_account_no || '-' }}
-              </p>
             </div>
-            <span
-              class="ml-auto rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"
-              >{{ item.wallet_type | walletTypeLabel }}</span
-            >
           </div>
-          <div class="mt-5">
-            <p class="m-0 text-xs uppercase tracking-wide text-slate-400">Available balance</p>
-            <p class="mb-0 mt-1 text-2xl font-bold text-blue-700">
-              {{ item.wallet_balance | money }}
-              <span class="text-sm text-slate-500">{{ item.wallet_currency }}</span>
+          <p class="text-xs uppercase text-slate-400 m-0!">Available balance</p>
+          <p class="text-2xl font-bold text-blue-700 m-0!">
+            {{ item.wallet_balance | money }}
+            <span class="text-sm text-slate-500">{{ item.wallet_currency }}</span>
+          </p>
+          <div class="flex gap-3 items-center">
+            <p class="bg-gray-100 rounded text-xs font-semibold p-1">
+              #{{ item.wallet_account_no || '-' }}
+            </p>
+            <p class="bg-gray-100 rounded text-xs font-semibold p-1">
+              {{ item.wallet_type | walletTypeLabel }}
+            </p>
+            <p class="bg-gray-100 rounded text-xs font-semibold p-1">
+              {{ item.wallet_account_name }}
+            </p>
+            <p class="bg-gray-100 rounded text-xs font-semibold p-1">
+              {{ accountTypeName(item.wallet_account_type) }}
             </p>
           </div>
         </div>
-
-        <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div class="grid gap-3 grid-cols-3">
+          <div class="rounded-xl bg-gray-100 p-3">
+            <dt class="text-xs text-slate-500">Master Password</dt>
+            <dd class="m-0 mt-1 truncate font-semibold capitalize text-slate-900">
+              {{ item.wallet_master_password || '-' }}
+            </dd>
+          </div>
+          <div class="rounded-xl bg-gray-100 p-3">
+            <dt class="text-xs text-slate-500">Investor Password</dt>
+            <dd class="m-0 mt-1 truncate font-semibold text-slate-900">
+              {{ item.wallet_investor_password || '-' }}
+            </dd>
+          </div>
           <div class="rounded-xl bg-gray-100 p-3">
             <dt class="text-xs text-slate-500">Credit</dt>
             <dd class="m-0 mt-1 truncate font-semibold text-slate-900">
@@ -98,33 +113,20 @@
               {{ item.wallet_leverage ? '1:' + item.wallet_leverage : '-' }}
             </dd>
           </div>
-          <div class="rounded-xl bg-gray-100 p-3">
-            <dt class="text-xs text-slate-500">Trading type</dt>
-            <dd class="m-0 mt-1 truncate font-semibold capitalize text-slate-900">
-              {{ item.wallet_trading_type }}
-            </dd>
-          </div>
-          <div class="rounded-xl bg-gray-100 p-3">
-            <dt class="text-xs text-slate-500">Server</dt>
-            <dd class="m-0 mt-1 truncate font-semibold text-slate-900">
-              {{ item.wallet_server || '-' }}
-            </dd>
-          </div>
-        </dl>
-
-        <footer class="mt-6 grid gap-3 sm:grid-cols-2">
+        </div>
+        <footer class="grid gap-3 sm:grid-cols-2">
           <button
             type="button"
-            [disabled]="item.is_deposit !== 1"
-            (click)="deposit.emit(item)"
-            class="h-11 rounded-lg border border-blue-700 bg-blue-700 font-semibold text-white disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
+            [disabled]="item.isDeposit !== 1"
+            (click)="deposit.emit(true)"
+            class="h-11 rounded-lg border border-blue-700 bg-blue-700 font-semibold text-white! disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
           >
             Deposit
           </button>
           <button
             type="button"
-            [disabled]="item.is_withdraw !== 1"
-            (click)="withdraw.emit(item)"
+            [disabled]="item.isWithdraw !== 1"
+            (click)="withdraw.emit(true)"
             class="h-11 rounded-lg border border-gray-200 bg-white font-semibold text-slate-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400"
           >
             Withdraw

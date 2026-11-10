@@ -2,7 +2,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { finalize, forkJoin } from 'rxjs';
-import { Wallet as WalletData, WalletType } from '../../../shared/models/wallet.model';
+import {
+  Wallet as WalletData,
+  WalletDetail,
+  WalletType,
+} from '../../../shared/models/wallet.model';
 import { WalletTypeApi } from '../../../shared/services/wallet/wallet.service';
 import { BarHead } from '../../../shared/components/UI/headers/bar-head/bar-head';
 import { toNumber } from '../../../shared/utils/wallet.mapper';
@@ -50,7 +54,7 @@ export class Wallet {
   readonly walletModalOpen = signal(false);
   readonly walletDetailLoading = signal(false);
   readonly walletDetailError = signal('');
-  readonly selectedWallet = signal<WalletData | null>(null);
+  readonly selectedWallet = signal<WalletDetail | null>(null);
   readonly openAccountModal = signal(false);
   readonly totalBalance = computed(() =>
     this.api.wallets().reduce((sum, item) => sum + toNumber(item.wallet_balance), 0),

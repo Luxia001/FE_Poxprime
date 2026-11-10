@@ -193,6 +193,7 @@
   [loading]="walletDetailLoading()"
   [error]="walletDetailError()"
   [wallet]="selectedWallet()"
+  [accountTypes]="api.accountTypes()"
   [fullName]="profileDisplay().fullName"
   [imageUrl]="profileDisplay().imageUrl || ''"
   (closed)="closeWalletModal()"

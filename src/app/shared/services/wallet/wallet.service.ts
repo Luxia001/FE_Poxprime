@@ -6,6 +6,7 @@ import {
   CreateWalletSuccessResponse,
   LeveragesResponse,
   Wallet,
+  WalletDetail,
   WalletDetailResponse,
   WalletsResponse,
   WalletType,
@@ -94,11 +95,11 @@ export class WalletTypeApi {
     );
   }
 
-  getWalletById(id: number): Observable<Wallet> {
+  getWalletById(id: number): Observable<WalletDetail> {
     return this.http.get<WalletDetailResponse>(`${this.base}/${id}`).pipe(
       map((res) => {
         if (!res.result) throw res;
-        return detailToWallet(res.data);
+        return res.data;
       }),
     );
   }
