@@ -15,7 +15,9 @@ import { MoneyPipe } from '../../../shared/pipes/walet.pipe';
 import { ProfileApi } from '../../account/services/profile-api';
 import { WalletDetailModal } from '../../../shared/components/UI/modals/wallet-detail-modal/wallet-detail-modal';
 import { OpenAccountModal } from '../../../shared/components/UI/modals/open-account-modal/open-account-modal';
+import { TabItem, TabUI } from '../../../shared/components/UI/tabs/tab.component';
 
+type WalletTab = 'ALL' | 'LIVE' | 'DEMO' | 'WALLET' | 'INACTIVE';
 @Component({
   imports: [
     FormsModule,
@@ -25,6 +27,7 @@ import { OpenAccountModal } from '../../../shared/components/UI/modals/open-acco
     MoneyPipe,
     WalletDetailModal,
     OpenAccountModal,
+    TabUI,
   ],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
@@ -50,6 +53,8 @@ export class Wallet {
     'bg-linear-to-r from-(--primary-theme--) to-sky-500 text-white! border-transparent';
   readonly inactiveClass = 'bg-white text-slate-700 border-gray-200 hover:bg-gray-50';
 
+  readonly tradingType = signal<WalletTab>('ALL');
+
   readonly detailError = signal('');
   readonly walletModalOpen = signal(false);
   readonly walletDetailLoading = signal(false);
@@ -68,6 +73,27 @@ export class Wallet {
   readonly otherWallets = computed(() =>
     this.api.wallets().filter((wallet) => wallet.wallet_type !== 'main'),
   );
+  /** รายการที่แสดง กรองตาม tab (ไม่รวม main wallet ที่แสดงแยก) */
+  readonly filteredWallets = computed(() => {
+    const list = this.otherWallets();
+    switch (this.tradingType()) {
+      case 'LIVE':
+        return list.filter(
+          (w) => w.wallet_type === '' && w.wallet_trading_type === 'live' && w.wallet_status === 1,
+        );
+      case 'DEMO':
+        return list.filter(
+          (w) => w.wallet_type === '' && w.wallet_trading_type === 'demo' && w.wallet_status === 1,
+        );
+      case 'WALLET':
+        return list.filter((w) => w.wallet_type !== '' && w.wallet_status === 1);
+      case 'INACTIVE':
+        return list.filter((w) => w.wallet_status !== 1);
+      default:
+        return list;
+    }
+  });
+
   constructor() {
     this.api.load();
   }
