@@ -15,8 +15,8 @@ import { MoneyPipe } from '../../../shared/pipes/walet.pipe';
 import { ProfileApi } from '../../account/services/profile-api';
 import { WalletDetailModal } from '../../../shared/components/UI/modals/wallet-detail-modal/wallet-detail-modal';
 import { OpenAccountModal } from '../../../shared/components/UI/modals/open-account-modal/open-account-modal';
-import { TabItem, TabUI } from '../../../shared/components/UI/tabs/tab.component';
-
+import { TabUI } from '../../../shared/components/UI/tabs/tab.component';
+import { LucideCircleArrowDown, LucideCircleArrowUp } from '@lucide/angular';
 type WalletTab = 'ALL' | 'LIVE' | 'DEMO' | 'WALLET' | 'INACTIVE';
 @Component({
   imports: [
@@ -28,6 +28,8 @@ type WalletTab = 'ALL' | 'LIVE' | 'DEMO' | 'WALLET' | 'INACTIVE';
     WalletDetailModal,
     OpenAccountModal,
     TabUI,
+    LucideCircleArrowDown,
+    LucideCircleArrowUp,
   ],
   selector: 'app-wallet',
   styleUrl: './wallet.css',
@@ -64,18 +66,9 @@ export class Wallet {
   readonly totalBalance = computed(() =>
     this.api.wallets().reduce((sum, item) => sum + toNumber(item.wallet_balance), 0),
   );
-  readonly activeWallets = computed(
-    () => this.api.wallets().filter((item) => item.wallet_status === 1).length,
-  );
-  readonly mainWallet = computed(
-    () => this.api.wallets().find((wallet) => wallet.wallet_type === 'main') ?? null,
-  );
-  readonly otherWallets = computed(() =>
-    this.api.wallets().filter((wallet) => wallet.wallet_type !== 'main'),
-  );
   /** รายการที่แสดง กรองตาม tab (ไม่รวม main wallet ที่แสดงแยก) */
   readonly filteredWallets = computed(() => {
-    const list = this.otherWallets();
+    const list = this.api.wallets();
     switch (this.tradingType()) {
       case 'LIVE':
         return list.filter(
